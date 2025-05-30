@@ -1,0 +1,174 @@
+<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Dashboard</h1>
+    <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">
+      Welcome back, <%= @current_user.display_name %>!
+      <span style="font-size: 0.875rem; color: var(--color-text-tertiary); font-weight: 500; padding: 0.25rem 0.75rem; background-color: var(--color-surface-secondary); border-radius: 9999px; margin-left: 0.5rem;">
+        <%= @current_user.role_name %>
+      </span>
+    </p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <% @stats.each do |key, value| %>
+      <div class="card-compact" style="transition: transform 0.2s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display: flex; align-items: center;">
+          <div style="flex-shrink: 0;">
+            <div style="width: 3rem; height: 3rem; background-color: var(--color-accent-primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: white; transition: transform 0.2s ease;">
+              <%= lucide_icon stat_icon_name(key), size: 24, class: "text-white " %>
+            </div>
+          </div>
+          <div style="margin-left: 1.25rem; flex: 1; min-width: 0;">
+            <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <%= key.to_s.humanize %>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-text-primary); margin-top: 0.25rem;">
+              <%= format_stat_value(key, value) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+      <!-- Quick Actions -->
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Quick Actions</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <% if @running_timer %>
+          <div class="surface" style="background-color: var(--color-surface-secondary); border: 1px solid var(--color-border); padding: 1rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <h4 style="font-weight: 600; color: var(--color-success); margin: 0;">Timer Running</h4>
+                <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.25rem 0;">
+                  <%= @running_timer.project.name %> - <%= @running_timer.description %>
+                </p>
+                <p style="font-size: 0.75rem; color: var(--color-text-tertiary); margin: 0.25rem 0;">
+                  Started: <%= time_ago_in_words(@running_timer.start_time) %> ago
+                </p>
+              </div>
+              <%= link_to "Stop Timer", stop_timer_time_log_path(@running_timer),
+                  method: :patch,
+                  class: "btn btn-error",
+                  data: { turbo_method: :patch } %>
+            </div>
+          </div>
+        <% else %>
+          <%= link_to new_time_log_path, class: "btn btn-primary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+            <%= lucide_icon "play", size: 16 %>
+            Start New Timer
+          <% end %>
+        <% end %>
+
+        <%= link_to time_logs_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "clock", size: 16 %>
+          View All Time Logs
+        <% end %>
+
+        <%= link_to projects_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "clipboard-list", size: 16 %>
+          Browse Projects
+        <% end %>
+
+        <%= link_to reports_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "bar-chart-3", size: 16 %>
+          View Reports
+        <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Recent Time Logs</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <% if @recent_time_logs&.any? %>
+          <% @recent_time_logs.limit(8).each do |log| %>
+            <div class="surface-secondary" style="border: 1px solid var(--color-border-light); padding: 1rem; transition: box-shadow 0.2s ease;" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow='var(--shadow-sm)'">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <%= log.project.name %>
+                  </p>
+                  <p style="font-size: 0.875rem; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.25rem;">
+                    <%= log.description %>
+                  </p>
+                  <p style="font-size: 0.75rem; color: var(--color-text-tertiary); margin-top: 0.25rem;">
+                    <%= log.user.display_name %> • <%= time_ago_in_words(log.created_at) %> ago
+                  </p>
+                </div>
+                <div style="flex-shrink: 0; text-align: right;">
+                  <p style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-primary);">
+                    <%= (log.duration_minutes / 60.0).round(1) %>h
+                  </p>
+                  <p style="font-size: 0.75rem; color: var(--color-success);">
+                    $<%= ((log.duration_minutes / 60.0) * log.hourly_rate).round(2) %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div style="text-align: center; padding: 2rem 0;">
+            <p style="color: var(--color-text-secondary);">No recent time logs found.</p>
+            <%= link_to "Start your first timer", new_time_log_path,
+                class: "btn btn-primary", style: "margin-top: 1rem;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Admin Section -->
+  <% if @current_user.system_admin? && @organizations %>
+    <div style="margin-top: 2rem;">
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Organizations Overview</h3>
+        </div>
+        <div style="overflow: hidden;">
+          <table style="min-width: 100%; width: 100%;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Organization</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Users</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Projects</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Total Hours</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @organizations.each do |org| %>
+                <tr style="border-bottom: 1px solid var(--color-border-light); transition: background-color 0.15s ease;" onmouseover="this.style.backgroundColor='var(--color-surface-secondary)'" onmouseout="this.style.backgroundColor='transparent'">
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap;">
+                    <%= link_to org.name, organization_path(org), style: "color: var(--color-accent-primary); font-weight: 600; text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
+                    <%= org.users.count %>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
+                    <%= org.clients.sum { |c| c.projects.count } %>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
+                    <%= (org.total_hours / 60.0).round(1) %>h
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-success); font-weight: 600;">
+                    $<%= number_with_delimiter(org.total_revenue.round(2)) %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+</div>

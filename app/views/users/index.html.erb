@@ -1,0 +1,234 @@
+<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Users</h1>
+        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Manage users and their access</p>
+      </div>
+      <% if policy(User).create? %>
+        <%= link_to new_user_path, class: "btn btn-primary", id: "new-user-btn", style: "display: flex; align-items: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "user-plus", size: 16 %>
+          New User
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <%= form_with url: users_path, method: :get, local: true, style: "display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;" do |form| %>
+      <div style="flex: 1; min-width: 16rem;">
+        <%= form.text_field :search,
+            value: params[:search],
+            placeholder: "Search by name or email...",
+            style: "width: 100%; padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
+            onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
+            onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" %>
+      </div>
+
+      <div>
+        <%= form.select :role,
+            options_for_select([
+              ['All Roles', ''],
+              ['System Admin', '0'],
+              ['Organization Admin', '1'],
+              ['Team Admin', '2'],
+              ['User', '3'],
+              ['Freelancer', '4']
+            ], params[:role]),
+            {},
+            { style: "padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
+              onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
+              onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" } %>
+      </div>
+
+      <% if Current.user.system_admin? %>
+        <div>
+          <%= form.select :organization_id,
+              options_from_collection_for_select(Organization.all, :id, :name, params[:organization_id]),
+              { prompt: 'All Organizations' },
+              { style: "padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
+                onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
+                onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" } %>
+        </div>
+      <% end %>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <%= form.submit "Filter", class: "btn btn-primary" %>
+        <%= link_to "Clear", users_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card" style="overflow: hidden;">
+    <% if @users.any? %>
+      <!-- Desktop Table -->
+      <div class="hidden md:block">
+        <div style="overflow-x: auto;">
+          <table style="min-width: 100%; width: 100%;">
+            <thead class="surface-secondary">
+              <tr style="border-bottom: 1px solid var(--color-border-light);">
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">User</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Role</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Organization</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Team</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Created</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: right; font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="surface">
+              <% @users.each do |user| %>
+                <tr style="border-bottom: 1px solid var(--color-border-light); transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='var(--color-surface-secondary)'" onmouseout="this.style.backgroundColor='transparent'">
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap;">
+                    <div style="display: flex; align-items: center;">
+                      <div style="flex-shrink: 0; width: 2.5rem; height: 2.5rem;">
+                        <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background-color: var(--color-accent-primary); display: flex; align-items: center; justify-content: center;">
+                          <span style="font-size: 0.875rem; font-weight: 500; color: white;">
+                            <%= user.display_name.first.upcase %>
+                          </span>
+                        </div>
+                      </div>
+                      <div style="margin-left: 1rem;">
+                        <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">
+                          <%= link_to user.display_name, user_path(user), style: "text-decoration: none; color: inherit;", onmouseover: "this.style.color='var(--color-accent-primary)'", onmouseout: "this.style.color='var(--color-text-primary)'" %>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--color-text-secondary);"><%= user.email_address %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap;">
+                    <div class="status-indicator <%= case user.role
+                        when 0 then 'status-error'     # system_admin
+                        when 1 then 'status-running'   # org_admin
+                        when 2 then 'status-success'   # team_admin
+                        when 3 then 'status-stopped'   # user
+                        when 4 then 'status-warning'   # freelancer
+                        else 'status-stopped'
+                        end %>">
+                      <%= user.role_name %>
+                    </div>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
+                    <%= user.organization&.name || 'None' %>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
+                    <%= user.team&.name || 'None' %>
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-secondary);">
+                    <%= time_ago_in_words(user.created_at) %> ago
+                  </td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: right; font-size: 0.875rem; font-weight: 500;">
+                    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                      <%= link_to "View", user_path(user),
+                          style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+                      <% if policy(user).update? %>
+                        <%= link_to "Edit", edit_user_path(user),
+                            style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+                      <% end %>
+                      <% if policy(user).impersonate? && user != Current.user %>
+                        <%= link_to "Impersonate", impersonate_user_path(user),
+                            style: "color: var(--color-warning); text-decoration: none;", onmouseover: "this.style.color='var(--color-warning)'", onmouseout: "this.style.color='var(--color-warning)'",
+                            data: {
+                              turbo_method: :post,
+                              confirm: "Are you sure you want to impersonate #{user.display_name}?"
+                            } %>
+                      <% end %>
+                      <% if policy(user).destroy? %>
+                        <%= link_to "Delete", user_path(user),
+                            style: "color: var(--color-error); text-decoration: none;", onmouseover: "this.style.color='var(--color-error)'", onmouseout: "this.style.color='var(--color-error)'",
+                            data: {
+                              turbo_method: :delete,
+                              confirm: "Are you sure you want to delete #{user.display_name}?"
+                            } %>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="md:hidden">
+        <% @users.each do |user| %>
+          <div style="border-bottom: 1px solid var(--color-border-light); padding: 1rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+              <div style="flex-shrink: 0; width: 2.5rem; height: 2.5rem;">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background-color: var(--color-accent-primary); display: flex; align-items: center; justify-content: center;">
+                  <span style="font-size: 0.875rem; font-weight: 500; color: white;">
+                    <%= user.display_name.first.upcase %>
+                  </span>
+                </div>
+              </div>
+              <div style="margin-left: 1rem; flex: 1;">
+                <div style="font-size: 1rem; font-weight: 500; color: var(--color-text-primary);">
+                  <%= link_to user.display_name, user_path(user), style: "text-decoration: none; color: inherit;" %>
+                </div>
+                <div style="font-size: 0.875rem; color: var(--color-text-secondary);"><%= user.email_address %></div>
+              </div>
+              <div class="status-indicator <%= case user.role
+                  when 0 then 'status-error'     # system_admin
+                  when 1 then 'status-running'   # org_admin
+                  when 2 then 'status-success'   # team_admin
+                  when 3 then 'status-stopped'   # user
+                  when 4 then 'status-warning'   # freelancer
+                  else 'status-stopped'
+                  end %>" style="font-size: 0.75rem;">
+                <%= user.role_name %>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; font-size: 0.875rem;">
+              <div>
+                <span style="color: var(--color-text-secondary);">Organization:</span>
+                <div style="color: var(--color-text-primary);"><%= user.organization&.name || 'None' %></div>
+              </div>
+              <div>
+                <span style="color: var(--color-text-secondary);">Team:</span>
+                <div style="color: var(--color-text-primary);"><%= user.team&.name || 'None' %></div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                Created <%= time_ago_in_words(user.created_at) %> ago
+              </div>
+              <div style="display: flex; gap: 0.75rem; font-size: 0.875rem;">
+                <%= link_to "View", user_path(user),
+                    style: "color: var(--color-accent-primary); text-decoration: none;" %>
+                <% if policy(user).update? %>
+                  <%= link_to "Edit", edit_user_path(user),
+                      style: "color: var(--color-accent-primary); text-decoration: none;" %>
+                <% end %>
+                <% if policy(user).destroy? %>
+                  <%= link_to "Delete", user_path(user),
+                      style: "color: var(--color-error); text-decoration: none;",
+                      data: {
+                        turbo_method: :delete,
+                        confirm: "Are you sure you want to delete #{user.display_name}?"
+                      } %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="text-align: center; padding: 3rem;">
+        <div style="margin-bottom: 1rem; display: flex; justify-content: center;">
+          <%= lucide_icon "users", size: 48, style: "color: var(--color-text-tertiary);" %>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0 0 0.5rem 0;">No users found</h3>
+        <p style="color: var(--color-text-secondary); margin: 0 0 1.5rem 0;">Try adjusting your search criteria or create a new user.</p>
+        <% if policy(User).create? %>
+          <%= link_to "New User", new_user_path,
+              class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

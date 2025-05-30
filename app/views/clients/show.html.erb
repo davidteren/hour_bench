@@ -1,0 +1,186 @@
+<div class="max-w-7xl mx-auto px-6 lg:px-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex justify-between items-start">
+      <div>
+        <div class="flex items-center gap-4 mb-2">
+          <h1 class="text-4xl font-bold text-primary"><%= @client.name %></h1>
+          <div class="status-indicator <%= @client.active? ? 'status-running' : 'status-stopped' %>">
+            <%= @client.status.humanize %>
+          </div>
+        </div>
+        <% if @client.company.present? %>
+          <p class="text-xl text-secondary"><%= @client.company %></p>
+        <% end %>
+        <nav class="flex items-center space-x-2 text-sm text-tertiary mt-2">
+          <%= link_to "Clients", (@organization ? organization_clients_path(@organization) : clients_path), class: "hover:text-accent" %>
+          <span>›</span>
+          <span class="text-primary"><%= @client.name %></span>
+        </nav>
+      </div>
+      
+      <% if @organization %>
+        <div class="flex space-x-3">
+          <%= link_to "Edit Client", edit_organization_client_path(@organization, @client), 
+              class: "btn btn-secondary" %>
+          <%= link_to "Delete", organization_client_path(@organization, @client), 
+              method: :delete,
+              data: { 
+                confirm: "Are you sure you want to delete #{@client.name}? This action cannot be undone." 
+              },
+              class: "btn btn-error" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Client Information -->
+    <div class="lg:col-span-1">
+      <div class="card">
+        <h2 class="text-xl font-semibold text-primary mb-6">Contact Information</h2>
+        
+        <div class="space-y-4">
+          <% if @client.email.present? %>
+            <div>
+              <label class="block text-sm font-medium text-secondary mb-1">Email</label>
+              <div class="flex items-center">
+                <%= lucide_icon "mail", size: 16, class: "mr-2 text-tertiary" %>
+                <%= mail_to @client.email, @client.email,
+                    class: "text-accent hover:text-accent-secondary" %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @client.phone.present? %>
+            <div>
+              <label class="block text-sm font-medium text-secondary mb-1">Phone</label>
+              <div class="flex items-center">
+                <%= lucide_icon "phone", size: 16, class: "mr-2 text-tertiary" %>
+                <span class="text-primary"><%= @client.phone %></span>
+              </div>
+            </div>
+          <% end %>
+          
+          <div>
+            <label class="block text-sm font-medium text-secondary mb-1">Status</label>
+            <div class="status-indicator <%= @client.active? ? 'status-running' : 'status-stopped' %>">
+              <%= @client.status.humanize %>
+            </div>
+          </div>
+          
+          <% if @client.notes.present? %>
+            <div>
+              <label class="block text-sm font-medium text-secondary mb-1">Notes</label>
+              <div class="text-primary whitespace-pre-wrap"><%= @client.notes %></div>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="mt-6 pt-6 border-t border-light">
+          <div class="text-xs text-tertiary">
+            <div>Created <%= time_ago_in_words(@client.created_at) %> ago</div>
+            <div>Updated <%= time_ago_in_words(@client.updated_at) %> ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects and Activity -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Projects -->
+      <div class="card">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold text-primary">Projects</h2>
+          <% if @organization %>
+            <%= link_to "New Project", new_organization_client_project_path(@organization, @client), 
+                class: "btn btn-primary" %>
+          <% end %>
+        </div>
+        
+        <% if @client.projects.any? %>
+          <div class="space-y-4">
+            <% @client.projects.includes(:time_logs).each do |project| %>
+              <div class="surface-secondary border border-light p-4 hover:shadow-md transition-shadow duration-200">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-primary">
+                      <%= link_to project.name, (@organization ? organization_client_project_path(@organization, @client, project) : project_path(project)), 
+                          class: "hover:text-accent" %>
+                    </h3>
+                    <% if project.description.present? %>
+                      <p class="text-sm text-secondary mt-1"><%= truncate(project.description, length: 100) %></p>
+                    <% end %>
+                    <div class="flex items-center space-x-4 mt-2 text-xs text-tertiary">
+                      <span>Rate: $<%= project.hourly_rate %>/hr</span>
+                      <span>Status: <%= project.status.humanize %></span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-medium text-primary">
+                      <%= (project.time_logs.sum(:duration_minutes) / 60.0).round(1) %>h logged
+                    </div>
+                    <div class="text-xs text-success">
+                      $<%= ((project.time_logs.sum(:duration_minutes) / 60.0) * project.hourly_rate).round(2) %> earned
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="mb-4 flex justify-center">
+              <%= lucide_icon "clipboard-list", size: 48, class: "text-tertiary" %>
+            </div>
+            <h3 class="text-lg font-semibold text-primary mb-2">No projects yet</h3>
+            <p class="text-secondary mb-4">Create the first project for this client to start tracking time.</p>
+            <% if @organization %>
+              <%= link_to "Create First Project", new_organization_client_project_path(@organization, @client),
+                  class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <h2 class="text-xl font-semibold text-primary mb-6">Recent Activity</h2>
+        
+        <% recent_logs = @client.projects.joins(:time_logs).includes(:time_logs => :user).limit(10) %>
+        <% if recent_logs.any? %>
+          <div class="space-y-3">
+            <% recent_logs.each do |project| %>
+              <% project.time_logs.recent.limit(3).each do |log| %>
+                <div class="flex items-center justify-between py-2 border-b border-light last:border-b-0">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-primary"><%= log.description %></div>
+                    <div class="text-xs text-secondary">
+                      <%= project.name %> • <%= log.user.display_name %> • <%= time_ago_in_words(log.created_at) %> ago
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-medium text-primary">
+                      <%= (log.duration_minutes / 60.0).round(1) %>h
+                    </div>
+                    <div class="text-xs text-success">
+                      $<%= ((log.duration_minutes / 60.0) * log.hourly_rate).round(2) %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="mb-4 flex justify-center">
+              <%= lucide_icon "clock", size: 48, class: "text-tertiary" %>
+            </div>
+            <h3 class="text-lg font-semibold text-primary mb-2">No activity yet</h3>
+            <p class="text-secondary">Time logs will appear here once work begins on this client's projects.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

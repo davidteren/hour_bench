@@ -1,0 +1,221 @@
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: var(--color-background);">
+  <div style="max-width: 28rem; width: 100%; margin: 0 auto; padding: 0 1.5rem;">
+    <!-- Logo/Brand -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <%= lucide_icon "clock", size: 32, class: "brand-icon" %>
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-accent-primary); margin: 0; font-family: var(--font-family-primary);">HourBench</h1>
+      </div>
+      <p style="margin-top: 0.5rem; color: var(--color-text-secondary); font-size: 1rem;">Time Tracking CRM</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card" style="padding: 2rem;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.875rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Welcome back</h2>
+        <p style="margin-top: 0.5rem; color: var(--color-text-secondary);">Sign in to your account</p>
+      </div>
+
+      <%= form_with url: session_url, local: true, style: "display: flex; flex-direction: column; gap: 1.5rem;" do |form| %>
+        <div>
+          <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.5rem;">Email Address</label>
+          <%= form.email_field :email_address,
+              required: true,
+              autofocus: true,
+              autocomplete: "username",
+              placeholder: "Enter your email address",
+              value: params[:email_address],
+              style: "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-size: 1rem; transition: all 0.2s ease; font-family: var(--font-family-primary);",
+              onfocus: "this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 3px rgba(79, 70, 229, 0.1)'",
+              onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" %>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.5rem;">Password</label>
+          <%= form.password_field :password,
+              required: true,
+              autocomplete: "current-password",
+              placeholder: "Enter your password",
+              maxlength: 72,
+              style: "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-size: 1rem; transition: all 0.2s ease; font-family: var(--font-family-primary);",
+              onfocus: "this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 3px rgba(79, 70, 229, 0.1)'",
+              onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" %>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <%= form.submit "Sign in", class: "btn btn-primary", style: "width: 100%; padding: 0.875rem 1rem; font-size: 1rem; font-weight: 600;" %>
+
+          <div style="text-align: center;">
+            <%= link_to "Forgot password?", new_password_path,
+                style: "color: var(--color-accent-primary); text-decoration: none; font-size: 0.875rem; font-weight: 500;",
+                onmouseover: "this.style.textDecoration='underline'",
+                onmouseout: "this.style.textDecoration='none'" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Development Quick Login Section -->
+    <% if Rails.env.development? && ENV['SHOW_TEST_CREDENTIALS'] == 'true' %>
+      <div class="card" style="padding: 1.5rem; margin-top: 1.5rem; border: 2px solid #f59e0b; background-color: #fef3c7;">
+        <div style="text-align: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #92400e; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <%= lucide_icon "zap", size: 20 %>
+            Development Only - Quick Login
+          </h3>
+          <p style="margin-top: 0.25rem; color: #92400e; font-size: 0.875rem;">Click any button to login instantly</p>
+        </div>
+
+        <div style="display: grid; gap: 1rem;">
+          <!-- System Admin -->
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
+              <%= lucide_icon "shield", size: 16 %>
+              System Admin
+            </h4>
+            <button onclick="quickLogin('admin@hours.com', 'password123')"
+                    class="btn"
+                    style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #dc2626; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                    onmouseover="this.style.backgroundColor='#b91c1c'"
+                    onmouseout="this.style.backgroundColor='#dc2626'">
+              Login as System Admin
+            </button>
+          </div>
+
+          <!-- Organization Admins -->
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
+              <%= lucide_icon "building", size: 16 %>
+              Organization Admins
+            </h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <button onclick="quickLogin('alice.johnson@techsolutions.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
+                Alice (TechSolutions)
+              </button>
+              <button onclick="quickLogin('luna.rodriguez@creative.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
+                Luna (Creative)
+              </button>
+              <button onclick="quickLogin('victor.chang@startup.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
+                Victor (StartupCorp)
+              </button>
+            </div>
+          </div>
+
+          <!-- Team Admins -->
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
+              <%= lucide_icon "users", size: 16 %>
+              Team Admins
+            </h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <button onclick="quickLogin('david.brown@techsolutions.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
+                David (Dev Team)
+              </button>
+              <button onclick="quickLogin('oscar.kim@creative.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
+                Oscar (Design Team)
+              </button>
+              <button onclick="quickLogin('xavier.bell@startup.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
+                Xavier (Product Team)
+              </button>
+            </div>
+          </div>
+
+          <!-- Regular Users -->
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
+              <%= lucide_icon "user", size: 16 %>
+              Regular Users
+            </h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <button onclick="quickLogin('grace.lee@techsolutions.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
+                Grace (TechSolutions)
+              </button>
+              <button onclick="quickLogin('ruby.white@creative.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
+                Ruby (Creative)
+              </button>
+              <button onclick="quickLogin('zoe.clark@startup.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
+                Zoe (StartupCorp)
+              </button>
+            </div>
+          </div>
+
+          <!-- Freelancers -->
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
+              <%= lucide_icon "briefcase", size: 16 %>
+              Freelancers
+            </h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <button onclick="quickLogin('blake.freeman@freelance.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #ea580c; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#dc2626'"
+                      onmouseout="this.style.backgroundColor='#ea580c'">
+                Blake Freeman
+              </button>
+              <button onclick="quickLogin('casey.jordan@freelance.com', 'password123')"
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #ea580c; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#dc2626'"
+                      onmouseout="this.style.backgroundColor='#ea580c'">
+                Casey Jordan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function quickLogin(email, password) {
+          // Fill the form fields
+          document.querySelector('input[name="email_address"]').value = email;
+          document.querySelector('input[name="password"]').value = password;
+
+          // Submit the form
+          document.querySelector('form').submit();
+        }
+      </script>
+    <% end %>
+
+    <!-- Footer -->
+    <div style="text-align: center; margin-top: 2rem;">
+      <p style="color: var(--color-text-tertiary); font-size: 0.875rem;">&copy; 2024 HourBench - Time Tracking CRM</p>
+    </div>
+  </div>
+</div>

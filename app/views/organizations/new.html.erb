@@ -1,0 +1,19 @@
+<div class="max-w-4xl mx-auto px-6 lg:px-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-primary">Create New Organization</h1>
+    <p class="mt-3 text-secondary text-lg">
+      Set up a new organization to manage teams, users, and projects
+    </p>
+    <nav class="flex items-center space-x-2 text-sm text-tertiary mt-2">
+      <%= link_to "Organizations", organizations_path, class: "hover:text-accent" %>
+      <span>›</span>
+      <span class="text-primary">New Organization</span>
+    </nav>
+  </div>
+
+  <!-- Form -->
+  <div class="card">
+    <%= render 'form' %>
+  </div>
+</div>

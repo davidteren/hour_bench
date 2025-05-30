@@ -1,0 +1,245 @@
+<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);"><%= @project.name %></h1>
+        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;"><%= @project.client.name %></p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <%= link_to new_project_time_log_path(@project),
+            class: "btn btn-primary", style: "display: flex; align-items: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "play", size: 16 %>
+          Log Time
+        <% end %>
+        <% if policy(@project).update? && @organization && @project.client %>
+          <%= link_to "Edit", edit_organization_client_project_path(@organization, @project.client, @project),
+              class: "btn btn-secondary" %>
+        <% end %>
+        <%= link_to "Back to Projects", (@organization && @project.client ? organization_client_projects_path(@organization, @project.client) : projects_path),
+            class: "btn btn-tertiary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Stats -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 3rem; height: 3rem; background-color: var(--color-accent-primary); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+          <%= lucide_icon "clock", size: 20 %>
+        </div>
+        <div>
+          <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Total Hours</div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-text-primary);"><%= @total_hours.round(1) %>h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 3rem; height: 3rem; background-color: var(--color-success); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+          <%= lucide_icon "dollar-sign", size: 20 %>
+        </div>
+        <div>
+          <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Revenue</div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-text-primary);">$<%= number_with_delimiter(@total_revenue.round(2)) %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 3rem; height: 3rem; background-color: var(--color-accent-secondary); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+          <%= lucide_icon "trending-up", size: 20 %>
+        </div>
+        <div>
+          <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Hourly Rate</div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-text-primary);">$<%= @project.hourly_rate %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 3rem; height: 3rem; background-color: var(--color-warning); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+          <%= lucide_icon "bar-chart", size: 20 %>
+        </div>
+        <div>
+          <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.25rem;">
+            <% if @project.budget %>
+              Budget Remaining
+            <% else %>
+              Status
+            <% end %>
+          </div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-text-primary);">
+            <% if @project.budget %>
+              $<%= number_with_delimiter(@project.budget_remaining.round(2)) %>
+            <% else %>
+              <%= @project.status.humanize %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Project Details -->
+    <div>
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Project Details</h3>
+        </div>
+        <div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div>
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Client</div>
+              <div style="color: var(--color-text-primary);"><%= @project.client.name %></div>
+            </div>
+            <div>
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Status</div>
+              <div>
+                <span class="status-indicator status-<%= @project.status %>">
+                  <%= @project.status.humanize %>
+                </span>
+              </div>
+            </div>
+            <% if @project.budget %>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Budget</div>
+                <div style="color: var(--color-text-primary);">$<%= number_with_delimiter(@project.budget) %></div>
+              </div>
+            <% end %>
+            <div>
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Team Members</div>
+              <div style="color: var(--color-text-primary);"><%= @team_members.count %> members</div>
+            </div>
+          </div>
+
+          <% if @project.description.present? %>
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border-light);">
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;">Description</div>
+              <div style="color: var(--color-text-primary); line-height: 1.6;">
+                <%= simple_format(@project.description) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Time Logs -->
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Recent Time Logs</h3>
+        </div>
+        <div>
+          <% if @recent_time_logs.any? %>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <% @recent_time_logs.each do |log| %>
+                <div style="padding: 1rem; border: 1px solid var(--color-border-light); border-radius: 0.5rem; background-color: var(--color-surface-secondary);">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <%= log.description %>
+                      </div>
+                      <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                        <%= log.user.display_name %> • <%= time_ago_in_words(log.created_at) %> ago
+                      </div>
+                    </div>
+                    <div style="text-align: right; margin-left: 1rem;">
+                      <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">
+                        <%= (log.duration_minutes / 60.0).round(1) %>h
+                      </div>
+                      <div style="font-size: 0.75rem; color: var(--color-success);">
+                        $<%= ((log.duration_minutes / 60.0) * log.hourly_rate).round(2) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align: center; padding: 2rem;">
+              <div style="margin-bottom: 1rem; display: flex; justify-content: center;">
+                <%= lucide_icon "clock", size: 48, style: "color: var(--color-text-tertiary);" %>
+              </div>
+              <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">No time logs yet.</p>
+              <%= link_to "Log your first entry", new_project_time_log_path(@project),
+                  class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+      <!-- Team Members -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Team Members</h3>
+        </div>
+        <div>
+          <% if @team_members.any? %>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% @team_members.each do |member| %>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div style="width: 2rem; height: 2rem; background-color: var(--color-accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 600;">
+                    <%= member.display_name.first.upcase %>
+                  </div>
+                  <div>
+                    <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);"><%= member.display_name %></div>
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary);"><%= member.role_name %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align: center; padding: 1rem;">
+              <div style="margin-bottom: 0.5rem; display: flex; justify-content: center;">
+                <%= lucide_icon "users", size: 32, style: "color: var(--color-text-tertiary);" %>
+              </div>
+              <p style="color: var(--color-text-secondary); font-size: 0.875rem;">No team members have logged time yet.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Issues -->
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Issues</h3>
+        </div>
+        <div>
+          <% if @issues.any? %>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% @issues.limit(5).each do |issue| %>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      <%= issue.title %>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                      <%= issue.priority.humanize %> priority
+                    </div>
+                  </div>
+                  <span class="status-indicator status-<%= issue.status %>" style="font-size: 0.75rem;">
+                    <%= issue.status.humanize %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align: center; padding: 1rem;">
+              <div style="margin-bottom: 0.5rem; display: flex; justify-content: center;">
+                <%= lucide_icon "alert-circle", size: 32, style: "color: var(--color-text-tertiary);" %>
+              </div>
+              <p style="color: var(--color-text-secondary); font-size: 0.875rem;">No issues created yet.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

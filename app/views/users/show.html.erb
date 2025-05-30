@@ -1,0 +1,216 @@
+<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; padding-bottom: 2rem;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div style="flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0;"><%= @user.display_name %></h1>
+            <span class="status-indicator <%= case @user.role
+                when 0 then 'status-error'     # system_admin
+                when 1 then 'status-running'   # org_admin
+                when 2 then 'status-success'   # team_admin
+                when 3 then 'status-stopped'   # user
+                when 4 then 'status-warning'   # freelancer
+                else 'status-stopped'
+                end %>">
+              <%= @user.role_name %>
+            </span>
+          </div>
+        </div>
+        <p style="font-size: 1.125rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;"><%= @user.email_address %></p>
+        <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-text-tertiary);">
+          <%= link_to "Users", users_path, style: "color: var(--color-accent-primary); text-decoration: none;" %>
+          <span>›</span>
+          <span style="color: var(--color-text-primary);"><%= @user.display_name %></span>
+        </nav>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+        <% if policy(@user).update? %>
+          <%= link_to "Edit User", edit_user_path(@user),
+              class: "btn btn-primary",
+              id: "edit-user-btn",
+              style: "display: inline-flex; align-items: center; justify-content: center;" %>
+        <% end %>
+        <% if policy(@user).impersonate? && @user != Current.user %>
+          <%= link_to "Impersonate", impersonate_user_path(@user),
+              class: "btn btn-secondary",
+              id: "impersonate-user-btn",
+              style: "display: inline-flex; align-items: center; justify-content: center; background-color: var(--color-warning); border-color: var(--color-warning);",
+              data: {
+                turbo_method: :post,
+                confirm: "Are you sure you want to impersonate #{@user.display_name}?"
+              } %>
+        <% end %>
+        <% if policy(@user).destroy? %>
+          <%= link_to "Delete", user_path(@user),
+              id: "delete-user-btn",
+              class: "btn",
+              style: "display: inline-flex; align-items: center; justify-content: center; background-color: var(--color-error); border-color: var(--color-error); color: white;",
+              data: {
+                turbo_method: :delete,
+                confirm: "Are you sure you want to delete #{@user.display_name}?"
+              } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+    <!-- User Information -->
+    <div style="order: 1;">
+      <div class="card" style="padding: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 1.5rem; margin-top: 0;">User Information</h2>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Name</label>
+            <div style="color: var(--color-text-primary);"><%= @user.name %></div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Email</label>
+            <div style="color: var(--color-text-primary);">
+              <%= mail_to @user.email_address, @user.email_address,
+                  style: "color: var(--color-accent-primary); text-decoration: none;" %>
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Role</label>
+            <span class="status-indicator <%= case @user.role
+                when 0 then 'status-error'     # system_admin
+                when 1 then 'status-running'   # org_admin
+                when 2 then 'status-success'   # team_admin
+                when 3 then 'status-stopped'   # user
+                when 4 then 'status-warning'   # freelancer
+                else 'status-stopped'
+                end %>">
+              <%= @user.role_name %>
+            </span>
+          </div>
+
+          <% if @user.organization %>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Organization</label>
+              <div style="color: var(--color-text-primary);"><%= @user.organization.name %></div>
+            </div>
+          <% end %>
+
+          <% if @user.team %>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.25rem;">Team</label>
+              <div style="color: var(--color-text-primary);"><%= @user.team.name %></div>
+            </div>
+          <% end %>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border-light);">
+          <div style="font-size: 0.75rem; color: var(--color-text-tertiary);">
+            <div>Created <%= time_ago_in_words(@user.created_at) %> ago</div>
+            <div>Updated <%= time_ago_in_words(@user.updated_at) %> ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions -->
+    <div style="order: 2;">
+      <div class="card" style="padding: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 1.5rem; margin-top: 0;">Permissions</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+          <div style="display: flex; align-items: center; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--color-border-light); background-color: <%= @user.can_impersonate? ? 'var(--color-success-light)' : 'var(--color-surface-secondary)' %>;">
+            <div style="flex-shrink: 0;">
+              <div style="width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: <%= @user.can_impersonate? ? 'var(--color-success)' : 'var(--color-text-tertiary)' %>; color: white; font-weight: 600;">
+                <%= @user.can_impersonate? ? "✓" : "✗" %>
+              </div>
+            </div>
+            <div style="margin-left: 0.75rem;">
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">Can Impersonate</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Ability to impersonate other users</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--color-border-light); background-color: <%= @user.can_manage_organization? ? 'var(--color-success-light)' : 'var(--color-surface-secondary)' %>;">
+            <div style="flex-shrink: 0;">
+              <div style="width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: <%= @user.can_manage_organization? ? 'var(--color-success)' : 'var(--color-text-tertiary)' %>; color: white; font-weight: 600;">
+                <%= @user.can_manage_organization? ? "✓" : "✗" %>
+              </div>
+            </div>
+            <div style="margin-left: 0.75rem;">
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">Manage Organization</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Can manage organization settings</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--color-border-light); background-color: <%= @user.can_manage_team? ? 'var(--color-success-light)' : 'var(--color-surface-secondary)' %>;">
+            <div style="flex-shrink: 0;">
+              <div style="width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: <%= @user.can_manage_team? ? 'var(--color-success)' : 'var(--color-text-tertiary)' %>; color: white; font-weight: 600;">
+                <%= @user.can_manage_team? ? "✓" : "✗" %>
+              </div>
+            </div>
+            <div style="margin-left: 0.75rem;">
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">Manage Team</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Can manage team members</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--color-border-light); background-color: <%= @user.system_admin? ? 'var(--color-success-light)' : 'var(--color-surface-secondary)' %>;">
+            <div style="flex-shrink: 0;">
+              <div style="width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: <%= @user.system_admin? ? 'var(--color-success)' : 'var(--color-text-tertiary)' %>; color: white; font-weight: 600;">
+                <%= @user.system_admin? ? "✓" : "✗" %>
+              </div>
+            </div>
+            <div style="margin-left: 0.75rem;">
+              <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">System Admin</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Full system access</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Time Logs -->
+    <div style="order: 3;">
+      <div class="card" style="padding: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 1.5rem; margin-top: 0;">Recent Time Logs</h2>
+
+        <% recent_logs = @user.time_logs.includes(:project => :client).order(created_at: :desc).limit(10) %>
+        <% if recent_logs.any? %>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <% recent_logs.each do |log| %>
+              <div style="display: flex; flex-direction: column; padding: 1rem; background-color: var(--color-surface-secondary); border-radius: 0.5rem; border: 1px solid var(--color-border-light);">
+                <div style="flex: 1; margin-bottom: 0.75rem;">
+                  <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem;"><%= log.description %></div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                    <span style="display: inline-block;"><%= log.project.name %></span>
+                    <span style="margin: 0 0.25rem;">•</span>
+                    <span style="display: inline-block;"><%= log.project.client.name %></span>
+                    <span style="margin: 0 0.25rem;">•</span>
+                    <span style="display: inline-block;"><%= time_ago_in_words(log.created_at) %> ago</span>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">
+                    <%= (log.duration_minutes / 60.0).round(1) %>h
+                  </div>
+                  <div style="font-size: 0.875rem; font-weight: 600; color: var(--color-success);">
+                    $<%= ((log.duration_minutes / 60.0) * log.hourly_rate).round(2) %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div style="text-align: center; padding: 2rem 0;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">⏰</div>
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 0.5rem;">No time logs yet</h3>
+            <p style="color: var(--color-text-secondary);">Time logs will appear here once this user starts tracking time.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

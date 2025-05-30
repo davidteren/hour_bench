@@ -1,0 +1,51 @@
+<%= form_with model: @organization, local: true, class: "space-y-6" do |form| %>
+  <% if @organization.errors.any? %>
+    <div class="surface-secondary border border-default text-error p-4">
+      <h3 class="font-semibold mb-2">Please fix the following errors:</h3>
+      <ul class="list-disc list-inside space-y-1">
+        <% @organization.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-6">
+    <!-- Name -->
+    <div>
+      <%= form.label :name, "Organization Name *", class: "block text-sm font-medium text-secondary mb-2" %>
+      <%= form.text_field :name, 
+          class: "w-full px-4 py-2 border border-default rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent #{'border-error' if @organization.errors[:name].any?}",
+          placeholder: "Enter organization name" %>
+      <% if @organization.errors[:name].any? %>
+        <p class="text-error text-sm mt-1"><%= @organization.errors[:name].first %></p>
+      <% end %>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <%= form.label :description, "Description", class: "block text-sm font-medium text-secondary mb-2" %>
+      <%= form.text_area :description, 
+          rows: 4,
+          class: "w-full px-4 py-2 border border-default rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent #{'border-error' if @organization.errors[:description].any?}",
+          placeholder: "Brief description of the organization..." %>
+      <% if @organization.errors[:description].any? %>
+        <p class="text-error text-sm mt-1"><%= @organization.errors[:description].first %></p>
+      <% end %>
+      <p class="text-xs text-tertiary mt-1">Maximum 1000 characters</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-between items-center pt-6 border-t border-light">
+    <div class="text-sm text-tertiary">
+      * Required fields
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to "Cancel", organizations_path, 
+          class: "btn btn-secondary" %>
+      <%= form.submit (@organization.new_record? ? "Create Organization" : "Update Organization"), 
+          class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

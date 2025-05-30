@@ -1,0 +1,130 @@
+<div style="max-width: 64rem; margin: 0 auto; padding: 0 1.5rem 2rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Edit Project</h1>
+    <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Update project information and settings</p>
+
+    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-text-tertiary); margin-top: 0.75rem;">
+      <% if @organization && @project.client %>
+        <%= link_to "Organizations", organizations_path, style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <%= link_to @organization.name, organization_path(@organization), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <%= link_to "Clients", organization_clients_path(@organization), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <%= link_to @project.client.name, organization_client_path(@organization, @project.client), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <%= link_to @project.name, organization_client_project_path(@organization, @project.client, @project), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <span style="color: var(--color-text-primary);">Edit</span>
+      <% else %>
+        <%= link_to "Projects", projects_path, style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <%= link_to @project.name, project_path(@project), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+        <span>›</span>
+        <span style="color: var(--color-text-primary);">Edit</span>
+      <% end %>
+    </nav>
+  </div>
+
+  <div class="card">
+    <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Project Information</h2>
+    </div>
+    
+    <%= form_with model: [@organization, @project.client, @project].compact, local: true, style: "display: flex; flex-direction: column; gap: 1.5rem;" do |form| %>
+      <% if @project.errors.any? %>
+        <div style="background-color: var(--color-error-light); border: 1px solid var(--color-error); border-radius: 0.5rem; padding: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <%= lucide_icon "alert-circle", size: 16, style: "color: var(--color-error);" %>
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-error); margin: 0;">
+              <%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:
+            </h3>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--color-error);">
+            <ul style="list-style: disc; padding-left: 1.25rem; margin: 0;">
+              <% @project.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div>
+          <%= form.label :name, "Project Name", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.text_field :name, 
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+              placeholder: "Enter project name",
+              required: true %>
+        </div>
+
+        <div>
+          <%= form.label :client_id, "Client", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.select :client_id, 
+              options_from_collection_for_select(@clients, :id, :name, @project.client_id),
+              { prompt: "Select a client" },
+              { style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+                required: true } %>
+        </div>
+
+        <div>
+          <%= form.label :status, "Status", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.select :status, 
+              options_for_select([
+                ['Active', 'active'],
+                ['Completed', 'completed'],
+                ['On Hold', 'on_hold']
+              ], @project.status),
+              {},
+              { style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" } %>
+        </div>
+
+        <div>
+          <%= form.label :hourly_rate, "Hourly Rate ($)", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.number_field :hourly_rate, 
+              step: 0.01,
+              min: 0.01,
+              placeholder: "0.00",
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+              required: true %>
+        </div>
+
+        <div>
+          <%= form.label :budget, "Budget ($)", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.number_field :budget, 
+              step: 0.01,
+              min: 0.01,
+              placeholder: "0.00 (optional)",
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" %>
+          <p style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--color-text-tertiary);">Leave blank for unlimited budget</p>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :description, "Description", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+        <%= form.text_area :description, 
+            placeholder: "Describe the project goals, scope, or any important details...",
+            style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem; resize: vertical;",
+            rows: 4 %>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--color-border-light);">
+        <div style="font-size: 0.875rem; color: var(--color-text-tertiary);">
+          * Required fields
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <% if @organization && @project.client %>
+            <%= link_to "Cancel", organization_client_project_path(@organization, @project.client, @project),
+                class: "btn btn-secondary" %>
+          <% else %>
+            <%= link_to "Cancel", project_path(@project),
+                class: "btn btn-secondary" %>
+          <% end %>
+          <%= form.submit "Update Project",
+              class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

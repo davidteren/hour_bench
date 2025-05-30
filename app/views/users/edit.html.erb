@@ -1,0 +1,134 @@
+<div style="max-width: 64rem; margin: 0 auto; padding: 0 1.5rem 2rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Edit User</h1>
+    <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Update user information and permissions</p>
+
+    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-text-tertiary); margin-top: 0.75rem;">
+      <%= link_to "Users", users_path, style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+      <span>›</span>
+      <%= link_to @user.display_name, user_path(@user), style: "color: var(--color-accent-primary); text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+      <span>›</span>
+      <span style="color: var(--color-text-primary);">Edit</span>
+    </nav>
+  </div>
+
+  <div class="card">
+    <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">User Information</h2>
+    </div>
+    
+    <%= form_with model: @user, local: true, style: "display: flex; flex-direction: column; gap: 1.5rem;" do |form| %>
+      <% if @user.errors.any? %>
+        <div style="background-color: var(--color-error-light); border: 1px solid var(--color-error); border-radius: 0.5rem; padding: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <%= lucide_icon "alert-circle", size: 16, style: "color: var(--color-error);" %>
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-error); margin: 0;">
+              <%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:
+            </h3>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--color-error);">
+            <ul style="list-style: disc; padding-left: 1.25rem; margin: 0;">
+              <% @user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div>
+          <%= form.label :name, "Name", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.text_field :name,
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+              required: true %>
+        </div>
+
+        <div>
+          <%= form.label :email_address, "Email Address", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.email_field :email_address,
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+              required: true %>
+        </div>
+
+        <div>
+          <%= form.label :password, "New Password (leave blank to keep current)", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.password_field :password,
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" %>
+        </div>
+
+        <div>
+          <%= form.label :password_confirmation, "Confirm New Password", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.password_field :password_confirmation,
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" %>
+        </div>
+
+        <div>
+          <%= form.label :role, "Role", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.select :role,
+              options_for_select([
+                ['User', '3'],
+                ['Team Admin', '2'],
+                ['Organization Admin', '1'],
+                *(Current.user.system_admin? ? [['System Admin', '0']] : []),
+                ['Freelancer', '4']
+              ], @user.role),
+              {},
+              { style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" } %>
+        </div>
+
+        <% if @organizations.any? %>
+          <div>
+            <%= form.label :organization_id, "Organization", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+            <%= form.select :organization_id,
+                options_from_collection_for_select(@organizations, :id, :name, @user.organization_id),
+                { prompt: 'Select Organization' },
+                {
+                  style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+                  onchange: "updateTeams(this.value)"
+                } %>
+          </div>
+        <% end %>
+
+        <div id="team-select" style="<%= 'display: none;' unless @user.organization_id %>">
+          <%= form.label :team_id, "Team", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.select :team_id,
+              options_from_collection_for_select(@teams, :id, :name, @user.team_id),
+              { prompt: 'Select Team (Optional)' },
+              {
+                style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;",
+                id: "team_select"
+              } %>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--color-border-light);">
+        <div style="font-size: 0.875rem; color: var(--color-text-tertiary);">
+          * Required fields
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <%= link_to "Cancel", user_path(@user),
+              class: "btn btn-secondary" %>
+          <%= form.submit "Update User",
+              class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function updateTeams(organizationId) {
+    const teamSelect = document.getElementById('team-select');
+    const teamSelectInput = document.getElementById('team_select');
+    
+    if (organizationId) {
+      teamSelect.style.display = 'block';
+      // In a real implementation, you'd make an AJAX call to get teams
+      // For now, we'll just show the select
+    } else {
+      teamSelect.style.display = 'none';
+      teamSelectInput.value = '';
+    }
+  }
+</script>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html data-theme="light">
+  <head>
+    <title>HourBench - Time Tracking CRM</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+      });
+
+      // Re-initialize icons after Turbo navigation
+      document.addEventListener('turbo:load', function() {
+        lucide.createIcons();
+      });
+    </script>
+  </head>
+
+  <body data-controller="theme mobile-menu" class="min-h-screen flex flex-col">
+    <% if Current.user %>
+      <!-- Navigation -->
+      <nav class="navbar-container">
+        <div class="navbar-content">
+          <!-- Mobile menu button -->
+          <div class="navbar-mobile-toggle" data-controller="mobile-menu">
+            <button type="button" id="mobile-menu-button" class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" data-action="click->mobile-menu#toggle">
+              <span class="sr-only">Open main menu</span>
+              <span id="mobile-menu-icon" class="mobile-menu-icon">
+                <%= lucide_icon "menu", size: 24 %>
+              </span>
+              <span id="mobile-menu-close" class="mobile-menu-close hidden">
+                <%= lucide_icon "x", size: 24 %>
+              </span>
+            </button>
+          </div>
+
+          <!-- Brand -->
+          <div class="navbar-brand">
+            <%= link_to root_path, class: "brand-link" do %>
+              <%= lucide_icon "clock", size: 24, class: "brand-icon" %>
+              <h1 class="brand-text">HourBench</h1>
+            <% end %>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="navbar-nav-desktop" id="desktop-navigation">
+            <%= link_to "Dashboard", dashboard_path,
+                class: "nav-link #{'active' if current_page?(dashboard_path)}", id: "nav-dashboard" %>
+
+            <% if Current.user.can_manage_organization? %>
+              <%= link_to "Organizations", organizations_path,
+                  class: "nav-link #{'active' if current_page?(organizations_path)}", id: "nav-organizations" %>
+              <%= link_to "Users", users_path,
+                  class: "nav-link #{'active' if current_page?(users_path)}", id: "nav-users" %>
+            <% end %>
+
+            <% if Current.user.system_admin? %>
+              <%= link_to "Clients", clients_path,
+                  class: "nav-link #{'active' if controller_name == 'clients'}", id: "nav-clients" %>
+            <% elsif Current.user.organization %>
+              <%= link_to "Clients", organization_clients_path(Current.user.organization),
+                  class: "nav-link #{'active' if controller_name == 'clients'}", id: "nav-clients" %>
+            <% else %>
+              <%= link_to "Clients", "#",
+                  class: "nav-link disabled", id: "nav-clients",
+                  title: "No organization assigned" %>
+            <% end %>
+            <%= link_to "Projects", projects_path,
+                class: "nav-link #{'active' if current_page?(projects_path)}", id: "nav-projects" %>
+            <%= link_to "Time Logs", time_logs_path,
+                class: "nav-link #{'active' if current_page?(time_logs_path)}", id: "nav-time-logs" %>
+          </div>
+
+          <!-- Right side controls -->
+          <div class="navbar-controls">
+            <!-- Theme Toggle -->
+            <button data-action="click->theme#toggle"
+                    data-theme-target="toggle"
+                    class="theme-toggle-premium"
+                    aria-label="Toggle theme"
+                    role="switch"
+                    aria-checked="false">
+              <span data-theme-target="lightIcon" class="theme-icon">
+                <%= lucide_icon "sun", size: 18 %>
+              </span>
+              <span data-theme-target="darkIcon" class="theme-icon hidden">
+                <%= lucide_icon "moon", size: 18 %>
+              </span>
+            </button>
+
+            <!-- Timer Status -->
+            <% running_timer = Current.user.time_logs.find_by(end_time: nil) %>
+            <% if running_timer %>
+              <div class="status-indicator status-running">
+                <div class="timer-pulse"></div>
+                <span class="timer-text">Timer Running</span>
+              </div>
+            <% end %>
+
+            <!-- Impersonation Banner -->
+            <% if Current.impersonating? %>
+              <div style="background-color: var(--color-warning); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; margin-right: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                <%= lucide_icon "user-check", size: 16 %>
+                <span>Impersonating: <%= Current.user.display_name %></span>
+                <%= link_to "Stop", stop_impersonation_users_path,
+                    method: :delete,
+                    style: "color: white; text-decoration: underline; margin-left: 0.5rem;",
+                    data: { turbo_method: :delete, turbo_confirm: "Stop impersonating #{Current.user.display_name}?" } %>
+              </div>
+            <% end %>
+
+            <!-- User Menu -->
+            <div class="user-menu">
+              <div class="user-info">
+                <div class="user-name">
+                  <%= Current.user.display_name %>
+                  <% if Current.impersonating? %>
+                    <span style="font-size: 0.75rem; color: var(--color-warning); font-weight: normal;">(Impersonated)</span>
+                  <% end %>
+                </div>
+                <div class="user-role"><%= Current.user.role_name %></div>
+              </div>
+              <%= link_to session_path,
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to sign out?" },
+                  class: "btn btn-secondary sign-out-btn", id: "sign-out-btn" do %>
+                <%= lucide_icon "log-out", size: 16, class: "sign-out-icon" %>
+                <span class="sign-out-text">Sign Out</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-menu hidden" id="mobile-menu">
+          <div class="mobile-nav-links">
+            <%= link_to "Dashboard", dashboard_path,
+                class: "mobile-nav-link #{'active' if current_page?(dashboard_path)}", id: "mobile-nav-dashboard" %>
+
+            <% if Current.user.can_manage_organization? %>
+              <%= link_to "Organizations", organizations_path,
+                  class: "mobile-nav-link #{'active' if current_page?(organizations_path)}", id: "mobile-nav-organizations" %>
+              <%= link_to "Users", users_path,
+                  class: "mobile-nav-link #{'active' if current_page?(users_path)}", id: "mobile-nav-users" %>
+            <% end %>
+
+            <% if Current.user.system_admin? %>
+              <%= link_to "Clients", clients_path,
+                  class: "mobile-nav-link #{'active' if controller_name == 'clients'}", id: "mobile-nav-clients" %>
+            <% elsif Current.user.organization %>
+              <%= link_to "Clients", organization_clients_path(Current.user.organization),
+                  class: "mobile-nav-link #{'active' if controller_name == 'clients'}", id: "mobile-nav-clients" %>
+            <% else %>
+              <span class="mobile-nav-link disabled" id="mobile-nav-clients" title="No organization assigned">Clients</span>
+            <% end %>
+            <%= link_to "Projects", projects_path,
+                class: "mobile-nav-link #{'active' if current_page?(projects_path)}", id: "mobile-nav-projects" %>
+            <%= link_to "Time Logs", time_logs_path,
+                class: "mobile-nav-link #{'active' if current_page?(time_logs_path)}", id: "mobile-nav-time-logs" %>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div style="margin: 1rem 1.5rem;">
+        <div class="surface" style="background-color: var(--color-success); color: white; padding: 1rem; border-radius: var(--radius-lg);">
+          <div style="display: flex; align-items: center;">
+            <%= lucide_icon "check-circle", size: 18, class: "text-white" %>
+            <span style="margin-left: 0.5rem;"><%= notice %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div style="margin: 1rem 1.5rem;">
+        <div class="surface" style="background-color: var(--color-error); color: white; padding: 1rem; border-radius: var(--radius-lg);">
+          <div style="display: flex; align-items: center;">
+            <%= lucide_icon "alert-circle", size: 18, class: "text-white" %>
+            <span style="margin-left: 0.5rem;"><%= alert %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-brand">
+            <%= lucide_icon "clock", size: 16, class: "footer-icon" %>
+            <span class="footer-brand-text">&copy; 2024 HourBench</span>
+          </div>
+          <p class="footer-description">Professional time tracking and client management</p>
+        </div>
+
+        <div class="footer-section">
+          <div class="footer-links">
+            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="#" class="footer-link">Terms of Service</a>
+            <a href="#" class="footer-link">Support</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <div class="footer-tech">
+            <span class="tech-badge">Rails <%= Rails.version %></span>
+            <span class="tech-badge">Built with ❤️</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

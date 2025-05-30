@@ -1,0 +1,89 @@
+<div style="max-width: 48rem; margin: 0 auto; padding: 0 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Start New Timer</h1>
+    <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Begin tracking time on a project</p>
+  </div>
+
+  <div class="card">
+    <div style="border-bottom: 1px solid var(--color-border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Time Log Details</h3>
+    </div>
+
+    <div>
+      <%= form_with model: @time_log, local: true, style: "display: flex; flex-direction: column; gap: 1.5rem;" do |form| %>
+        <% if @time_log.errors.any? %>
+          <div style="background-color: var(--color-error-light); border: 1px solid var(--color-error); border-radius: 0.5rem; padding: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <%= lucide_icon "alert-circle", size: 16, style: "color: var(--color-error);" %>
+              <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-error); margin: 0;">
+                <%= pluralize(@time_log.errors.count, "error") %> prohibited this time log from being saved:
+              </h3>
+            </div>
+            <div style="font-size: 0.875rem; color: var(--color-error);">
+              <ul style="list-style: disc; padding-left: 1.25rem; margin: 0;">
+                <% @time_log.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div>
+          <%= form.label :project_id, "Project", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.select :project_id,
+              options_from_collection_for_select(@projects, :id, :name, @project&.id),
+              { prompt: "Select a project" },
+              { style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" } %>
+        </div>
+
+        <div>
+          <%= form.label :description, "Description", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+          <%= form.text_area :description,
+              placeholder: "What are you working on?",
+              style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem; resize: vertical;",
+              rows: 3 %>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <%= form.label :start_time, "Start Time", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+            <%= form.datetime_local_field :start_time,
+                value: Time.current.strftime("%Y-%m-%dT%H:%M"),
+                style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" %>
+          </div>
+
+          <div>
+            <%= form.label :hourly_rate, "Hourly Rate ($)", style: "display: block; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.5rem;" %>
+            <%= form.number_field :hourly_rate,
+                step: 0.01,
+                placeholder: "0.00",
+                style: "width: 100%; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 0.5rem; background-color: var(--color-surface); color: var(--color-text-primary); font-size: 0.875rem;" %>
+            <p style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--color-text-tertiary);">Leave blank to use project default rate</p>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <%= form.check_box :billable,
+                checked: true,
+                style: "width: 1rem; height: 1rem;" %>
+            <%= form.label :billable, "Billable time", style: "font-size: 0.875rem; color: var(--color-text-primary);" %>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--color-border-light);">
+          <div style="font-size: 0.875rem; color: var(--color-text-tertiary);">
+            * Required fields
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <%= link_to "Cancel", time_logs_path,
+                class: "btn btn-secondary" %>
+            <%= form.submit "Start Timer",
+                class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

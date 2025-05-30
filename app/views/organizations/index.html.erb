@@ -1,0 +1,85 @@
+<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Organizations</h1>
+        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">
+          Manage organizations and their settings
+        </p>
+      </div>
+      <% if policy(Organization).create? %>
+        <%= link_to new_organization_path,
+            class: "btn btn-primary", style: "display: flex; align-items: center; gap: 0.5rem;" do %>
+          <%= lucide_icon "plus", size: 16 %>
+          Add New Organization
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Organizations Grid -->
+  <% if @organizations.any? %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      <% @organizations.each do |organization| %>
+        <div class="card-compact" style="transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+              <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--color-text-primary); transition: color 0.2s ease; margin: 0;">
+                <%= link_to organization.name, organization_path(organization), style: "text-decoration: none; color: inherit;", onmouseover: "this.style.color='var(--color-accent-primary)'", onmouseout: "this.style.color='var(--color-text-primary)'" %>
+              </h3>
+              <% if organization.description.present? %>
+                <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 0.25rem;"><%= truncate(organization.description, length: 100) %></p>
+              <% end %>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; font-size: 0.875rem; color: var(--color-text-secondary);">
+              <%= lucide_icon "users", size: 14, style: "margin-right: 0.5rem;" %>
+              <%= pluralize(organization.users.count, 'user') %>
+            </div>
+
+            <div style="display: flex; align-items: center; font-size: 0.875rem; color: var(--color-text-secondary);">
+              <%= lucide_icon "building", size: 14, style: "margin-right: 0.5rem;" %>
+              <%= pluralize(organization.teams.count, 'team') %>
+            </div>
+
+            <div style="display: flex; align-items: center; font-size: 0.875rem; color: var(--color-text-secondary);">
+              <%= lucide_icon "user-check", size: 14, style: "margin-right: 0.5rem;" %>
+              <%= pluralize(organization.clients.count, 'client') %>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--color-border-light);">
+            <div style="display: flex; gap: 0.5rem;">
+              <%= link_to "View", organization_path(organization),
+                  style: "font-size: 0.875rem; color: var(--color-accent-primary); font-weight: 500; text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+              <% if policy(organization).update? %>
+                <%= link_to "Edit", edit_organization_path(organization),
+                    style: "font-size: 0.875rem; color: var(--color-accent-primary); font-weight: 500; text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
+              <% end %>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--color-text-tertiary);">
+              Updated <%= time_ago_in_words(organization.updated_at) %> ago
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card" style="text-align: center; padding: 3rem;">
+      <div style="margin-bottom: 1rem; display: flex; justify-content: center;">
+        <%= lucide_icon "building", size: 48, style: "color: var(--color-text-tertiary);" %>
+      </div>
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0 0 0.5rem 0;">No organizations found</h3>
+      <p style="color: var(--color-text-secondary); margin: 0 0 1.5rem 0;">
+        Get started by creating your first organization.
+      </p>
+      <% if policy(Organization).create? %>
+        <%= link_to "Create Your First Organization", new_organization_path,
+            class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
