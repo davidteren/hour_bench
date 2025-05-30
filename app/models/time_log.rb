@@ -32,7 +32,7 @@ class TimeLog < ApplicationRecord
 
   def stop_timer!
     return false unless running?
-    
+
     self.end_time = Time.current
     calculate_duration
     save!
@@ -42,13 +42,13 @@ class TimeLog < ApplicationRecord
 
   def calculate_duration
     return unless start_time && end_time
-    
+
     self.duration_minutes = ((end_time - start_time) / 60).round
   end
 
   def set_default_hourly_rate
     return if hourly_rate.present?
-    
+
     self.hourly_rate = project&.hourly_rate || 0
   end
 end

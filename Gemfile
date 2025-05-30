@@ -37,9 +37,6 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-# Tailwind CSS for styling
-gem "tailwindcss-rails"
-
 # Image processing for ActiveStorage
 gem "image_processing", "~> 1.2"
 
@@ -67,6 +64,8 @@ group :development, :test do
 
   # Bullet gem for N+1 detection
   gem "bullet"
+
+  gem "bundler-audit"
 end
 
 group :development do

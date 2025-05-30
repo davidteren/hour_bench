@@ -180,7 +180,7 @@ organizations.each do |org|
       organization: org
     )
     clients << client
-    
+
     # Add address for client
     Address.create!(
       street: Faker::Address.street_address,
@@ -190,10 +190,10 @@ organizations.each do |org|
       country: "USA",
       addressable: client
     )
-    
+
     puts "  🏢 Created client: #{client.name}"
   end
-  
+
   # Create projects for each client
   clients.each do |client|
     rand(1..4).times do
@@ -205,9 +205,9 @@ organizations.each do |org|
         budget: rand(5000..50000),
         client: client
       )
-      
+
       puts "    📋 Created project: #{project.name}"
-      
+
       # Create issues for each project
       rand(2..8).times do
         issue = Issue.create!(
@@ -217,13 +217,13 @@ organizations.each do |org|
           priority: rand(0..3),
           project: project
         )
-        
+
         # Create documents for some issues
         if rand < 0.3
           Document.create!(
             title: Faker::File.file_name(dir: '', name: Faker::Lorem.word, ext: 'pdf'),
             description: Faker::Lorem.sentence,
-            document_type: ['contract', 'invoice', 'report', 'memo'].sample,
+            document_type: [ 'contract', 'invoice', 'report', 'memo' ].sample,
             version: "1.0",
             issue: issue
           )
@@ -238,31 +238,31 @@ puts "⏰ Creating time logs..."
 
 User.where.not(role: 0).find_each do |user| # Skip system admin
   next if user.role == 4 && user.organization.nil? # Skip freelancers for now
-  
+
   # Get projects for this user's organization
   projects = Project.joins(:client).where(clients: { organization: user.organization })
-  
+
   # Create 10-50 time logs per user
   rand(10..50).times do
     project = projects.sample
     next unless project
-    
+
     start_time = Faker::Time.between(from: 30.days.ago, to: Time.current)
     duration = rand(15..480) # 15 minutes to 8 hours
-    
+
     time_log = TimeLog.create!(
       start_time: start_time,
       end_time: start_time + duration.minutes,
       duration_minutes: duration,
       description: Faker::Lorem.sentence,
-      billable: [true, false].sample,
+      billable: [ true, false ].sample,
       hourly_rate: project.hourly_rate,
       user: user,
       project: project,
       issue: project.issues.sample
     )
   end
-  
+
   puts "  ⏱️  Created time logs for: #{user.name}"
 end
 

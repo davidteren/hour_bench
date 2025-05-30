@@ -15,6 +15,6 @@ class Address < ApplicationRecord
   end
 
   def us_address?
-    country.downcase.in?(['us', 'usa', 'united states'])
+    country.downcase.in?([ "us", "usa", "united states" ])
   end
 end

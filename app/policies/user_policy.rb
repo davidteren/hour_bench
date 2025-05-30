@@ -4,7 +4,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user == record || user.can_manage_organization? || 
+    user == record || user.can_manage_organization? ||
     (user.can_manage_team? && user.team == record.team)
   end
 
@@ -13,7 +13,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user == record || user.can_manage_organization? || 
+    user == record || user.can_manage_organization? ||
     (user.can_manage_team? && user.team == record.team)
   end
 

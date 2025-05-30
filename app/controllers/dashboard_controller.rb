@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
 
   def index
     @current_user = Current.user
-    
+
     if @current_user.system_admin?
       # System admin sees everything - with intentional N+1 issues
       @organizations = Organization.all
@@ -23,7 +23,7 @@ class DashboardController < ApplicationController
       @running_timer = @current_user.time_logs.find_by(end_time: nil)
       @projects = available_projects_for_user(@current_user)
     end
-    
+
     # Intentional performance issue - calculate stats without proper aggregation
     @stats = calculate_dashboard_stats
   end
@@ -53,7 +53,7 @@ class DashboardController < ApplicationController
 
   def calculate_dashboard_stats
     user = Current.user
-    
+
     if user.system_admin?
       {
         total_hours: TimeLog.sum(:duration_minutes) / 60.0,

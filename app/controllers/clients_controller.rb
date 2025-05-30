@@ -1,7 +1,7 @@
 class ClientsController < ApplicationController
   before_action :set_organization
-  before_action :set_client, only: [:show, :edit, :update, :destroy]
-  
+  before_action :set_client, only: [ :show, :edit, :update, :destroy ]
+
   def index
     @clients = policy_scope(Client)
 
@@ -41,7 +41,7 @@ class ClientsController < ApplicationController
 
     if @client.save
       redirect_to organization_client_path(@organization, @client),
-                  notice: 'Client was successfully created.'
+                  notice: "Client was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -56,7 +56,7 @@ class ClientsController < ApplicationController
 
     if @client.update(client_params)
       redirect_to organization_client_path(@organization, @client),
-                  notice: 'Client was successfully updated.'
+                  notice: "Client was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -66,7 +66,7 @@ class ClientsController < ApplicationController
     authorize @client
     @client.destroy
     redirect_to organization_clients_path(@organization),
-                notice: 'Client was successfully deleted.'
+                notice: "Client was successfully deleted."
   end
 
   private

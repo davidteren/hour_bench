@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
   before_action :require_authentication
-  before_action :set_organization, only: [:show, :edit, :update, :destroy]
+  before_action :set_organization, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @organizations = policy_scope(Organization).includes(:users, :teams)
@@ -8,7 +8,7 @@ class OrganizationsController < ApplicationController
     # If impersonating, redirect to the user's organization
     if Current.impersonating? && Current.user.organization
       redirect_to organization_path(Current.user.organization)
-      return
+      nil
     end
   end
 
@@ -28,7 +28,7 @@ class OrganizationsController < ApplicationController
     if @organization.save
       # Add the current user to the organization
       @organization.users << Current.user unless @organization.users.include?(Current.user)
-      redirect_to @organization, notice: 'Organization was successfully created.'
+      redirect_to @organization, notice: "Organization was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,7 +42,7 @@ class OrganizationsController < ApplicationController
     authorize @organization
 
     if @organization.update(organization_params)
-      redirect_to @organization, notice: 'Organization was successfully updated.'
+      redirect_to @organization, notice: "Organization was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -51,7 +51,7 @@ class OrganizationsController < ApplicationController
   def destroy
     authorize @organization
     @organization.destroy
-    redirect_to organizations_url, notice: 'Organization was successfully deleted.'
+    redirect_to organizations_url, notice: "Organization was successfully deleted."
   end
 
   private

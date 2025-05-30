@@ -4,7 +4,7 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def show?
-    user.system_admin? || 
+    user.system_admin? ||
     (user.organization && record.client.organization == user.organization)
   end
 
@@ -13,12 +13,12 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def update?
-    user.can_manage_organization? && 
+    user.can_manage_organization? &&
     (user.system_admin? || record.client.organization == user.organization)
   end
 
   def destroy?
-    user.can_manage_organization? && 
+    user.can_manage_organization? &&
     (user.system_admin? || record.client.organization == user.organization)
   end
 

@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  
+
   # Dashboard and main routes
   root "dashboard#index"
   get "dashboard", to: "dashboard#index"
-  
+
   # Core resources
   resources :organizations do
     resources :teams
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
   resources :users do
     member do
       post :impersonate
@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       delete :stop_impersonation
     end
   end
-  
+
   resources :time_logs do
     member do
       patch :stop_timer
@@ -36,14 +36,14 @@ Rails.application.routes.draw do
       get :running
     end
   end
-  
-  resources :projects, only: [:index, :show] do
-    resources :time_logs, only: [:index, :new, :create]
+
+  resources :projects, only: [ :index, :show ] do
+    resources :time_logs, only: [ :index, :new, :create ]
   end
 
   # System admin routes (not organization-scoped)
-  resources :clients, only: [:index, :show, :new, :create, :edit, :update, :destroy]
-  
+  resources :clients, only: [ :index, :show, :new, :create, :edit, :update, :destroy ]
+
   # Reports
   get "reports", to: "reports#index"
   get "reports/time", to: "reports#time"

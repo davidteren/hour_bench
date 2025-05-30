@@ -73,7 +73,7 @@ Rails.application.configure do
   # Configure Bullet for N+1 detection
   config.after_initialize do
     Bullet.enable = true
-    Bullet.alert = ENV.fetch('BULLET_ALERTS', 'false') == 'true'  # Configurable via env var
+    Bullet.alert = ENV.fetch("BULLET_ALERTS", "false") == "true"  # Configurable via env var
     Bullet.bullet_logger = true
     Bullet.console = true
     Bullet.rails_logger = true

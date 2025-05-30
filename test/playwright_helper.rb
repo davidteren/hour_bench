@@ -3,7 +3,7 @@ require "playwright"
 
 class PlaywrightTestCase < ActiveSupport::TestCase
   def setup
-    @playwright = Playwright.create(playwright_cli_executable_path: 'npx playwright')
+    @playwright = Playwright.create(playwright_cli_executable_path: "npx playwright")
     @browser = @playwright.chromium.launch(headless: true)
     @context = @browser.new_context
     @page = @context.new_page

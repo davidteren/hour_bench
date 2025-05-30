@@ -1,18 +1,18 @@
 class ProjectsController < ApplicationController
   before_action :require_authentication
   before_action :set_organization_context
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @projects = policy_scope(Project)
-    
+
     # Intentional performance issue - missing includes
     @projects = @projects.order(:name)
-    
+
     if params[:client_id].present?
       @projects = @projects.where(client_id: params[:client_id])
     end
-    
+
     if params[:status].present?
       @projects = @projects.where(status: params[:status])
     end
@@ -44,9 +44,9 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     authorize @project
-    
+
     if @project.save
-      redirect_to (@organization && @project.client ? organization_client_project_path(@organization, @project.client, @project) : project_path(@project)), notice: 'Project was successfully created.'
+      redirect_to (@organization && @project.client ? organization_client_project_path(@organization, @project.client, @project) : project_path(@project)), notice: "Project was successfully created."
     else
       @clients = available_clients
       render :new, status: :unprocessable_entity
@@ -60,9 +60,9 @@ class ProjectsController < ApplicationController
 
   def update
     authorize @project
-    
+
     if @project.update(project_params)
-      redirect_to (@organization && @project.client ? organization_client_project_path(@organization, @project.client, @project) : project_path(@project)), notice: 'Project was successfully updated.'
+      redirect_to (@organization && @project.client ? organization_client_project_path(@organization, @project.client, @project) : project_path(@project)), notice: "Project was successfully updated."
     else
       @clients = available_clients
       render :edit, status: :unprocessable_entity
@@ -72,7 +72,7 @@ class ProjectsController < ApplicationController
   def destroy
     authorize @project
     @project.destroy
-    redirect_to (@organization && @project.client ? organization_client_projects_path(@organization, @project.client) : projects_path), notice: 'Project was successfully deleted.'
+    redirect_to (@organization && @project.client ? organization_client_projects_path(@organization, @project.client) : projects_path), notice: "Project was successfully deleted."
   end
 
   private

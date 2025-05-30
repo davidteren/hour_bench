@@ -91,21 +91,21 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     other_org = Organization.create!(name: "Other Org", description: "Test")
     other_client = Client.create!(name: "Other Client", email: "other@test.com", organization: other_org)
     other_project = Project.create!(name: "Other Project", client: other_client, hourly_rate: 100, status: "active")
-    
+
     sign_in_as(@system_admin)
     get projects_url
     assert_response :success
-    
+
     # System admin should see projects from all organizations in their scope
     assert_select "h1", text: /Projects/
   end
 
   test "org admin only sees organization projects" do
-    # Create project in different organization  
+    # Create project in different organization
     other_org = Organization.create!(name: "Other Org", description: "Test")
     other_client = Client.create!(name: "Other Client", email: "other@test.com", organization: other_org)
     other_project = Project.create!(name: "Other Project", client: other_client, hourly_rate: 100, status: "active")
-    
+
     sign_in_as(@org_admin)
     get organization_client_projects_url(@organization, @client)
     assert_response :success

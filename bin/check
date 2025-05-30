@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+def run_command(command, description)
+  puts "\n\e[36m==>\e[0m \e[1m#{description}\e[0m"
+  system(command)
+
+  unless $?.success?
+    puts "\n\e[31m✖ #{description} failed with exit code #{$?.exitstatus}\e[0m"
+    exit($?.exitstatus)
+  end
+
+  puts "\e[32m✓ #{description} passed\e[0m\n"
+end
+
+# Ensure we're in the root of the project
+root_dir = File.expand_path('../', __dir__)
+Dir.chdir(root_dir)
+
+puts "\e[1mRunning local CI checks\e[0m"
+puts "Running in order: bundler-audit → brakeman → rubocop → minitest"
+puts "Checks will fail fast on first error\n"
+
+# Set environment variables similar to CI
+ENV['RAILS_ENV'] ||= 'test'
+
+begin
+  # Run security audits
+  run_command('bundle exec bundler-audit update && bundle exec bundler-audit check', 'Bundle security audit')
+  run_command('bundle exec brakeman --no-pager', 'Rails security audit')
+
+  # run_command('yarn audit', 'Yarn audit')
+
+  # Run linting
+  run_command('bundle exec bin/rubocop -f github --parallel', 'Code linting')
+
+  # Prepare test database
+  run_command('bundle exec rails db:test:prepare', 'Preparing test database')
+
+  # Build and test CSS
+  # run_command('yarn build:css', 'Building CSS')
+  # run_command('bundle exec rake tailwind:test', 'Testing Tailwind CSS')
+
+  # Run tests
+  run_command('bundle exec rails test', 'Running tests')
+
+
+  # Run Playwright tests
+  run_command('npx playwright test', 'Running Playwright tests')
+
+  puts "\n\e[42m\e[30m ALL CHECKS PASSED \e[0m\n"
+rescue => e
+  puts "\n\e[41m\e[30m ERROR: #{e.message} \e[0m\n"
+  exit(1)
+end
