@@ -2,7 +2,7 @@
 
 async function loginAsSystemAdmin(page) {
   await page.goto('/session/new');
-  await page.fill('input[name="email_address"]', 'admin@hours.com');
+  await page.fill('input[name="email_address"]', 'admin@hourbench.com');
   await page.fill('input[name="password"]', 'password123');
   await page.click('input[type="submit"]');
   await page.waitForURL('/'); // Root redirects to dashboard
