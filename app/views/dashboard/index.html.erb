@@ -31,22 +31,23 @@
     <% end %>
   </div>
 
-  <div class="dashboard-grid">
-    <!-- Quick Actions -->
-    <div class="dashboard-card">
-      <div class="dashboard-card-header">
-        <h3 class="dashboard-card-title">Quick Actions</h3>
-      </div>
-      <div class="quick-actions">
+  <div class="grid gap-xl">
+    <div class="grid-auto-fit-lg">
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="flex flex-col gap-md">
         <% if @running_timer %>
-          <div class="running-timer">
-            <div class="running-timer-header">
-              <div class="running-timer-info">
-                <h4 class="running-timer-title">Timer Running</h4>
-                <p class="running-timer-project">
+          <div class="surface-secondary p-lg">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold text-success m-0">Timer Running</h4>
+                <p class="text-sm text-secondary mt-xs mb-xs">
                   <%= @running_timer.project.name %> - <%= @running_timer.description %>
                 </p>
-                <p class="running-timer-time">
+                <p class="text-xs text-tertiary mt-xs mb-xs">
                   Started: <%= time_ago_in_words(@running_timer.start_time) %> ago
                 </p>
               </div>
@@ -80,32 +81,32 @@
         </div>
       </div>
 
-    <!-- Recent Activity -->
-    <div class="dashboard-card">
-      <div class="dashboard-card-header">
-        <h3 class="dashboard-card-title">Recent Time Logs</h3>
-      </div>
-      <div class="recent-activity">
+      <!-- Recent Activity -->
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Recent Time Logs</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
         <% if @recent_time_logs&.any? %>
           <% @recent_time_logs.limit(8).each do |log| %>
-            <div class="activity-item">
-              <div class="activity-header">
-                <div class="activity-info">
-                  <p class="activity-project">
+            <div class="surface-secondary" style="border: 1px solid var(--color-border-light); padding: 1rem; transition: box-shadow 0.2s ease;" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow='var(--shadow-sm)'">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <%= log.project.name %>
                   </p>
-                  <p class="activity-description">
+                  <p style="font-size: 0.875rem; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.25rem;">
                     <%= log.description %>
                   </p>
-                  <p class="activity-meta">
+                  <p style="font-size: 0.75rem; color: var(--color-text-tertiary); margin-top: 0.25rem;">
                     <%= log.user.display_name %> • <%= time_ago_in_words(log.created_at) %> ago
                   </p>
                 </div>
-                <div class="activity-duration">
-                  <p class="activity-hours">
+                <div style="flex-shrink: 0; text-align: right;">
+                  <p style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-primary);">
                     <%= (log.duration_minutes / 60.0).round(1) %>h
                   </p>
-                  <p class="activity-revenue">
+                  <p style="font-size: 0.75rem; color: var(--color-success);">
                     $<%= ((log.duration_minutes / 60.0) * log.hourly_rate).round(2) %>
                   </p>
                 </div>
@@ -113,10 +114,10 @@
             </div>
           <% end %>
         <% else %>
-          <div class="empty-state">
-            <p class="empty-state-description">No recent time logs found.</p>
+          <div style="text-align: center; padding: 2rem 0;">
+            <p style="color: var(--color-text-secondary);">No recent time logs found.</p>
             <%= link_to "Start your first timer", new_time_log_path,
-                class: "btn btn-primary" %>
+                class: "btn btn-primary", style: "margin-top: 1rem;" %>
           </div>
         <% end %>
       </div>
@@ -125,45 +126,38 @@
 
   <!-- System Admin Section -->
   <% if @current_user.system_admin? && @organizations %>
-    <div class="admin-section">
-      <div class="dashboard-card">
-        <div class="dashboard-card-header">
-          <h3 class="dashboard-card-title">Organizations Overview</h3>
+    <div style="margin-top: 2rem;">
+      <div class="card">
+        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Organizations Overview</h3>
         </div>
-
-        <!-- Mobile message -->
-        <div class="admin-mobile-message">
-          <p>Organization details are best viewed on desktop. Please use a larger screen for the full table view.</p>
-        </div>
-
-        <!-- Desktop table -->
-        <div class="admin-table-container">
-          <table class="admin-table">
+        <div style="overflow: hidden;">
+          <table style="min-width: 100%; width: 100%;">
             <thead>
-              <tr>
-                <th>Organization</th>
-                <th>Users</th>
-                <th>Projects</th>
-                <th>Total Hours</th>
-                <th>Revenue</th>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Organization</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Users</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Projects</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Total Hours</th>
+                <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Revenue</th>
               </tr>
             </thead>
             <tbody>
               <% @organizations.each do |org| %>
-                <tr>
-                  <td>
-                    <%= link_to org.name, organization_path(org), class: "admin-table-link" %>
+                <tr style="border-bottom: 1px solid var(--color-border-light); transition: background-color 0.15s ease;" onmouseover="this.style.backgroundColor='var(--color-surface-secondary)'" onmouseout="this.style.backgroundColor='transparent'">
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap;">
+                    <%= link_to org.name, organization_path(org), style: "color: var(--color-accent-primary); font-weight: 600; text-decoration: none;", onmouseover: "this.style.color='var(--color-accent-secondary)'", onmouseout: "this.style.color='var(--color-accent-primary)'" %>
                   </td>
-                  <td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
                     <%= org.users.count %>
                   </td>
-                  <td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
                     <%= org.clients.sum { |c| c.projects.count } %>
                   </td>
-                  <td>
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-text-primary);">
                     <%= (org.total_hours / 60.0).round(1) %>h
                   </td>
-                  <td class="admin-table-revenue">
+                  <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-success); font-weight: 600;">
                     $<%= number_with_delimiter(org.total_revenue.round(2)) %>
                   </td>
                 </tr>
@@ -174,4 +168,5 @@
       </div>
     </div>
   <% end %>
+</div>
 </div>

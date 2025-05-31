@@ -46,15 +46,15 @@
       <% end %>
     </div>
 
-    <!-- Demo Quick Login Section -->
-    <% unless ENV['SHOW_TEST_CREDENTIALS'] == 'false' %>
+    <!-- Development Quick Login Section -->
+    <% if Rails.env.development? && ENV['SHOW_TEST_CREDENTIALS'] == 'true' %>
       <div class="quick-login-section">
         <div class="quick-login-header">
           <h3 class="quick-login-title">
-            <%= lucide_icon "users", size: 20 %>
-            Demo Accounts
+            <%= lucide_icon "zap", size: 20 %>
+            Development Only - Quick Login
           </h3>
-          <p class="quick-login-description">For demonstration purposes only - Click any account to login instantly</p>
+          <p class="quick-login-description">Click any button to login instantly</p>
         </div>
 
         <div class="quick-login-groups">
@@ -64,91 +64,124 @@
               <%= lucide_icon "shield", size: 16 %>
               System Admin
             </h4>
-            <button onclick="quickLogin('admin@hourbench.com', 'password123')"
+            <button onclick="quickLogin('admin@hours.com', 'password123')"
                     class="quick-login-btn admin btn-full">
               Login as System Admin
             </button>
           </div>
 
           <!-- Organization Admins -->
-          <div class="quick-login-group">
-            <h4 class="quick-login-group-title org-admin">
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
               <%= lucide_icon "building", size: 16 %>
               Organization Admins
             </h4>
-            <div class="quick-login-user-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
               <button onclick="quickLogin('alice.johnson@techsolutions.com', 'password123')"
-                      class="quick-login-user-btn org-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
                 Alice (TechSolutions)
               </button>
               <button onclick="quickLogin('luna.rodriguez@creative.com', 'password123')"
-                      class="quick-login-user-btn org-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
                 Luna (Creative)
               </button>
               <button onclick="quickLogin('victor.chang@startup.com', 'password123')"
-                      class="quick-login-user-btn org-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#1d4ed8'"
+                      onmouseout="this.style.backgroundColor='#2563eb'">
                 Victor (StartupCorp)
               </button>
             </div>
           </div>
 
           <!-- Team Admins -->
-          <div class="quick-login-group">
-            <h4 class="quick-login-group-title team-admin">
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
               <%= lucide_icon "users", size: 16 %>
               Team Admins
             </h4>
-            <div class="quick-login-user-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
               <button onclick="quickLogin('david.brown@techsolutions.com', 'password123')"
-                      class="quick-login-user-btn team-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
                 David (Dev Team)
               </button>
               <button onclick="quickLogin('oscar.kim@creative.com', 'password123')"
-                      class="quick-login-user-btn team-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
                 Oscar (Design Team)
               </button>
               <button onclick="quickLogin('xavier.bell@startup.com', 'password123')"
-                      class="quick-login-user-btn team-admin">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #059669; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#047857'"
+                      onmouseout="this.style.backgroundColor='#059669'">
                 Xavier (Product Team)
               </button>
             </div>
           </div>
 
           <!-- Regular Users -->
-          <div class="quick-login-group">
-            <h4 class="quick-login-group-title regular">
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
               <%= lucide_icon "user", size: 16 %>
               Regular Users
             </h4>
-            <div class="quick-login-user-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
               <button onclick="quickLogin('grace.lee@techsolutions.com', 'password123')"
-                      class="quick-login-user-btn regular">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
                 Grace (TechSolutions)
               </button>
               <button onclick="quickLogin('ruby.white@creative.com', 'password123')"
-                      class="quick-login-user-btn regular">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
                 Ruby (Creative)
               </button>
               <button onclick="quickLogin('zoe.clark@startup.com', 'password123')"
-                      class="quick-login-user-btn regular">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #7c3aed; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#6d28d9'"
+                      onmouseout="this.style.backgroundColor='#7c3aed'">
                 Zoe (StartupCorp)
               </button>
             </div>
           </div>
 
           <!-- Freelancers -->
-          <div class="quick-login-group">
-            <h4 class="quick-login-group-title freelancer">
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.25rem;">
               <%= lucide_icon "briefcase", size: 16 %>
               Freelancers
             </h4>
-            <div class="quick-login-user-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
               <button onclick="quickLogin('blake.freeman@freelance.com', 'password123')"
-                      class="quick-login-user-btn freelancer">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #ea580c; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#dc2626'"
+                      onmouseout="this.style.backgroundColor='#ea580c'">
                 Blake Freeman
               </button>
               <button onclick="quickLogin('casey.jordan@freelance.com', 'password123')"
-                      class="quick-login-user-btn freelancer">
+                      class="btn"
+                      style="padding: 0.5rem; font-size: 0.75rem; background-color: #ea580c; color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;"
+                      onmouseover="this.style.backgroundColor='#dc2626'"
+                      onmouseout="this.style.backgroundColor='#ea580c'">
                 Casey Jordan
               </button>
             </div>
@@ -159,19 +192,11 @@
       <script>
         function quickLogin(email, password) {
           // Fill the form fields
-          const emailField = document.querySelector('input[name="email_address"]');
-          const passwordField = document.querySelector('input[name="password"]');
-          const form = document.querySelector('form');
+          document.querySelector('input[name="email_address"]').value = email;
+          document.querySelector('input[name="password"]').value = password;
 
-          if (emailField && passwordField && form) {
-            emailField.value = email;
-            passwordField.value = password;
-
-            // Add a small delay to ensure fields are populated before submission
-            setTimeout(() => {
-              form.submit();
-            }, 100);
-          }
+          // Submit the form
+          document.querySelector('form').submit();
         }
       </script>
     <% end %>
