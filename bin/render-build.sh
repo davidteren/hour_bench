@@ -2,9 +2,6 @@
 # exit on error
 set -o errexit
 
-# Run setup script
-./bin/setup-render.sh
-
 # Install dependencies and prepare application
 bundle install
 bundle exec rails assets:precompile
