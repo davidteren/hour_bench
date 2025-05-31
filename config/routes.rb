@@ -1,54 +1,63 @@
 Rails.application.routes.draw do
+  # Public landing page routes
+  root "landing#index"
+  get "features", to: "landing#features"
+  get "about", to: "landing#about"
+
+  # Authentication routes (public)
   resource :session
   resources :passwords, param: :token
 
-  # Dashboard and main routes
-  root "dashboard#index"
-  get "dashboard", to: "dashboard#index"
+  # Authenticated application routes
+  scope '/app' do
+    # Dashboard
+    get "dashboard", to: "dashboard#index"
+    get "", to: "dashboard#index", as: :app_root
 
-  # Core resources
-  resources :organizations do
-    resources :teams
-    resources :clients do
-      resources :projects do
-        resources :issues do
-          resources :documents
+    # Core resources
+    resources :organizations do
+      resources :teams
+      resources :clients do
+        resources :projects do
+          resources :issues do
+            resources :documents
+          end
+          resources :time_logs
         end
-        resources :time_logs
       end
     end
-  end
 
-  resources :users do
-    member do
-      post :impersonate
+    resources :users do
+      member do
+        post :impersonate
+      end
+      collection do
+        delete :stop_impersonation
+      end
     end
-    collection do
-      delete :stop_impersonation
+
+    resources :time_logs do
+      member do
+        patch :stop_timer
+      end
+      collection do
+        get :running
+      end
     end
-  end
 
-  resources :time_logs do
-    member do
-      patch :stop_timer
+    resources :projects, only: [ :index, :show ] do
+      resources :time_logs, only: [ :index, :new, :create ]
     end
-    collection do
-      get :running
-    end
+
+    # System admin routes (not organization-scoped)
+    resources :clients, only: [ :index, :show, :new, :create, :edit, :update, :destroy ]
+
+    # Reports
+    get "reports", to: "reports#index"
+    get "reports/time", to: "reports#time"
+    get "reports/revenue", to: "reports#revenue"
+    get "reports/performance", to: "reports#performance"
   end
-
-  resources :projects, only: [ :index, :show ] do
-    resources :time_logs, only: [ :index, :new, :create ]
-  end
-
-  # System admin routes (not organization-scoped)
-  resources :clients, only: [ :index, :show, :new, :create, :edit, :update, :destroy ]
-
-  # Reports
-  get "reports", to: "reports#index"
-  get "reports/time", to: "reports#time"
-  get "reports/revenue", to: "reports#revenue"
-  get "reports/performance", to: "reports#performance"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
