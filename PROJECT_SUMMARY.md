@@ -16,11 +16,40 @@ Experimental application with intentional performance issues, anti-patterns & bu
 - TDD with minitest in `test/`
 - Playwright E2E tests in `tests/`
 - Always run the app using `bin/dev`
-- Use Playwright when developing UI - check console errors, page errors, request failures, visual validation, 
+- Use Playwright when developing UI - check console errors, page errors, request failures, visual validation,
   screenshots for visual analysis `script/playwright` persist scripts for reuse
 - Feature branches → specific problem branches (performance, security, bugs, etc.)
 - Never merge to main
 - Frequent commits
+
+## Branching Strategy
+
+### Snapshot Branches for Testing & Comparison
+We maintain systematic snapshot branches to preserve project states for:
+- **LLM Testing**: Evaluate agentic coding tools against known baselines
+- **Performance Benchmarking**: Measure optimization improvements
+- **Educational Purposes**: Demonstrate Rails anti-patterns and fixes
+- **Regression Testing**: Ensure changes don't break existing functionality
+
+### Naming Convention
+**Format**: `snapshot/{YYYY-MM-DD}/{milestone-type}-{brief-description}`
+
+**Milestone Types**:
+- `baseline`: Initial state or major milestone baseline
+- `pre-optimization`: State before performance optimization work
+- `pre-refactor`: State before major refactoring
+- `pre-feature`: State before implementing major features
+- `post-fix`: State after fixing major issues (for comparison)
+
+**Examples**:
+- `snapshot/2025-01-15/baseline-with-known-issues`
+- `snapshot/2025-01-20/pre-optimization-n-plus-one-queries`
+- `snapshot/2025-01-25/pre-refactor-dashboard-analytics`
+
+### Documentation
+- **CHANGELOG.md**: Major changes, milestones, and snapshot creation events
+- **BRANCH_LOG.md**: Detailed tracking of all snapshot branches and their purposes
+- Each snapshot documents: purpose, preserved state, known issues, use cases, testing instructions
 
 ## Tech Stack
 
