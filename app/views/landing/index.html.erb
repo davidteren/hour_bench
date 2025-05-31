@@ -1,0 +1,130 @@
+<% content_for :title, "Modern Project Management for Learning" %>
+<% content_for :description, "Experimental project management application designed for performance optimization education, code assessment, and real-world learning scenarios." %>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Modern Project Management
+        <span class="hero-accent">Built for Learning</span>
+      </h1>
+      <p class="hero-subtitle">
+        Experimental project management application designed for performance optimization education, 
+        code assessment, and real-world learning scenarios. Explore Rails 8 features, intentional 
+        performance challenges, and modern development practices.
+      </p>
+      <div class="hero-actions">
+        <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-large" %>
+        <%= link_to "View Features", "#features", class: "btn btn-secondary btn-large" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+  <div class="container">
+    <h2 class="section-title">Powerful Features</h2>
+    <div class="features-grid" data-controller="features">
+      <% @features.each_with_index do |feature, index| %>
+        <div class="feature-card" 
+             data-features-target="card" 
+             data-action="mouseenter->features#highlight">
+          <div class="feature-icon">
+            <i data-lucide="<%= feature[:icon] %>"></i>
+          </div>
+          <h3 class="feature-title"><%= feature[:title] %></h3>
+          <p class="feature-description"><%= feature[:description] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases Section -->
+<section class="use-cases-section">
+  <div class="container">
+    <h2 class="section-title">Perfect For Different Audiences</h2>
+    <div class="use-cases-grid">
+      <% @use_cases.each do |use_case| %>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">
+              <i data-lucide="<%= use_case[:icon] %>"></i>
+            </div>
+            <h3 class="use-case-title"><%= use_case[:title] %></h3>
+          </div>
+          <p class="use-case-description"><%= use_case[:description] %></p>
+          <ul class="use-case-benefits">
+            <% use_case[:benefits].each do |benefit| %>
+              <li><%= benefit %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack Section -->
+<section class="tech-stack-section">
+  <div class="container">
+    <h2 class="section-title">Modern Technology Stack</h2>
+    <div class="tech-stack-grid">
+      <% @tech_stack.each do |category| %>
+        <div class="tech-category-card">
+          <h3 class="tech-category-title"><%= category[:category] %></h3>
+          <div class="tech-list">
+            <% category[:technologies].each do |tech| %>
+              <div class="tech-item">
+                <div class="tech-name"><%= tech[:name] %></div>
+                <div class="tech-description"><%= tech[:description] %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Demo Access Section -->
+<section class="demo-section">
+  <div class="container">
+    <h2 class="section-title">Try the Demo</h2>
+    <p class="demo-intro">
+      Access the application with different user roles to explore various features and capabilities.
+      <br><strong>Password for all accounts:</strong> <code class="demo-password">password123</code>
+    </p>
+    <div class="demo-grid">
+      <% @demo_users.each do |user| %>
+        <div class="demo-card">
+          <div class="demo-role"><%= user[:role] %></div>
+          <div class="demo-email"><%= user[:email] %></div>
+          <div class="demo-description"><%= user[:description] %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="demo-cta">
+      <%= link_to "Start Demo", new_session_path, class: "btn btn-primary btn-large" %>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Explore?</h2>
+      <p class="cta-subtitle">
+        Dive into a real-world Rails application with intentional performance challenges, 
+        modern features, and comprehensive learning opportunities.
+      </p>
+      <div class="cta-actions">
+        <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-large" %>
+        <%= link_to "View Features", features_path, class: "btn btn-secondary btn-large" %>
+      </div>
+    </div>
+  </div>
+</section>

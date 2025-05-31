@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html data-theme="light">
+  <head>
+    <title><%= content_for?(:title) ? "#{content_for(:title)} - HourBench" : "HourBench - Modern Project Management for Learning" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<%= content_for?(:description) ? content_for(:description) : 'Modern project management application for learning, assessment, and performance optimization. Built with Rails 8, featuring intentional performance issues for educational purposes.' %>">
+    <meta name="keywords" content="project management, time tracking, Rails 8, performance optimization, learning platform, educational software">
+    <meta name="author" content="HourBench">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="<%= content_for?(:title) ? content_for(:title) : 'HourBench - Learning-Focused Project Management' %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? content_for(:description) : 'Experimental project management app with intentional performance issues for education and assessment' %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:site_name" content="HourBench">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= content_for?(:title) ? content_for(:title) : 'HourBench - Learning-Focused Project Management' %>">
+    <meta name="twitter:description" content="<%= content_for?(:description) ? content_for(:description) : 'Modern project management platform for learning and assessment' %>">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+      });
+
+      // Re-initialize icons after Turbo navigation
+      document.addEventListener('turbo:load', function() {
+        lucide.createIcons();
+      });
+    </script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "HourBench",
+      "description": "Learning-focused project management application with intentional performance issues for educational purposes",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "HourBench"
+      }
+    }
+    </script>
+
+    <%= content_for :head %>
+  </head>
+
+  <body data-controller="theme">
+    <!-- Landing Page Navigation -->
+    <nav class="landing-nav">
+      <div class="container">
+        <div class="nav-content">
+          <!-- Brand -->
+          <div class="nav-brand">
+            <%= link_to root_path, class: "brand-link" do %>
+              <i data-lucide="clock" class="brand-icon"></i>
+              <h1 class="brand-text">HourBench</h1>
+            <% end %>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="nav-links-desktop">
+            <%= link_to "Features", features_path, class: "nav-link" %>
+            <%= link_to "About", about_path, class: "nav-link" %>
+            <%= link_to "Demo", new_session_path, class: "nav-link" %>
+          </div>
+
+          <!-- Theme Toggle & CTA -->
+          <div class="nav-actions">
+            <!-- Theme Toggle -->
+            <button data-action="click->theme#toggle" 
+                    class="theme-toggle-premium"
+                    aria-label="Toggle theme"
+                    data-testid="theme-toggle">
+              <span class="theme-icon theme-icon-light">
+                <i data-lucide="sun"></i>
+              </span>
+              <span class="theme-icon theme-icon-dark">
+                <i data-lucide="moon"></i>
+              </span>
+            </button>
+
+            <!-- CTA Button -->
+            <%= link_to "Try Demo", new_session_path, class: "btn btn-primary" %>
+
+            <!-- Mobile Menu Toggle -->
+            <button data-controller="mobile-nav" 
+                    data-action="click->mobile-nav#toggle"
+                    class="mobile-menu-button"
+                    aria-label="Toggle mobile menu">
+              <span class="mobile-menu-icon">
+                <i data-lucide="menu"></i>
+              </span>
+              <span class="sr-only">Menu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-menu hidden" data-mobile-nav-target="menu">
+          <div class="mobile-nav-content">
+            <%= link_to "Features", features_path, class: "mobile-nav-link" %>
+            <%= link_to "About", about_path, class: "mobile-nav-link" %>
+            <%= link_to "Demo", new_session_path, class: "mobile-nav-link" %>
+            <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-full" %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="landing-main">
+      <%= yield %>
+    </main>
+
+    <!-- Landing Page Footer -->
+    <footer class="landing-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-brand">
+              <i data-lucide="clock" class="footer-icon"></i>
+              <span class="footer-brand-text">&copy; <%= Date.current.year %> HourBench</span>
+            </div>
+            <p class="footer-description">Modern project management for learning and assessment</p>
+          </div>
+
+          <div class="footer-section">
+            <h4 class="footer-title">Product</h4>
+            <div class="footer-links">
+              <%= link_to "Features", features_path, class: "footer-link" %>
+              <%= link_to "About", about_path, class: "footer-link" %>
+              <%= link_to "Demo", new_session_path, class: "footer-link" %>
+            </div>
+          </div>
+
+          <div class="footer-section">
+            <h4 class="footer-title">Resources</h4>
+            <div class="footer-links">
+              <a href="#" class="footer-link">Documentation</a>
+              <a href="#" class="footer-link">Support</a>
+              <a href="#" class="footer-link">Privacy Policy</a>
+            </div>
+          </div>
+
+          <div class="footer-section">
+            <h4 class="footer-title">Technology</h4>
+            <div class="footer-links">
+              <a href="https://rubyonrails.org" class="footer-link" target="_blank" rel="noopener">Rails 8</a>
+              <a href="https://hotwired.dev" class="footer-link" target="_blank" rel="noopener">Hotwire</a>
+              <a href="https://stimulus.hotwired.dev" class="footer-link" target="_blank" rel="noopener">Stimulus</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="flash-message flash-notice" data-controller="flash" data-action="click->flash#dismiss">
+        <%= notice %>
+        <button data-action="click->flash#dismiss" class="flash-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="flash-message flash-alert" data-controller="flash" data-action="click->flash#dismiss">
+        <%= alert %>
+        <button data-action="click->flash#dismiss" class="flash-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+    <% end %>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<% content_for :title, "About HourBench" %>
+<% content_for :description, "Learn about HourBench's purpose as an experimental project management application designed for performance optimization education and code assessment." %>
+
+<!-- About Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        About
+        <span class="hero-accent">HourBench</span>
+      </h1>
+      <p class="hero-subtitle">
+        An experimental project management application with intentional performance issues, 
+        anti-patterns, and bugs designed for learning, assessment, and optimization practice.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Purpose Section -->
+<section class="features-section">
+  <div class="container">
+    <h2 class="section-title">Purpose & Goals</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="graduation-cap"></i>
+        </div>
+        <h3 class="feature-title">Educational Platform</h3>
+        <p class="feature-description">
+          Designed specifically for learning performance optimization, Rails best practices, 
+          and real-world problem-solving scenarios.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="search"></i>
+        </div>
+        <h3 class="feature-title">Assessment Tool</h3>
+        <p class="feature-description">
+          Perfect for evaluating coding skills, problem-solving approaches, 
+          and knowledge of Rails optimization techniques.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="zap"></i>
+        </div>
+        <h3 class="feature-title">Performance Lab</h3>
+        <p class="feature-description">
+          Intentional performance issues provide hands-on experience with 
+          optimization challenges in a safe, controlled environment.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="code"></i>
+        </div>
+        <h3 class="feature-title">Modern Rails Showcase</h3>
+        <p class="feature-description">
+          Demonstrates Rails 8 features, Hotwire implementation, 
+          and contemporary development practices.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology Stack Section -->
+<section class="tech-stack-section">
+  <div class="container">
+    <h2 class="section-title">Technology Stack</h2>
+    <div class="tech-stack-grid">
+      <% @tech_stack.each do |category| %>
+        <div class="tech-category-card">
+          <h3 class="tech-category-title"><%= category[:category] %></h3>
+          <div class="tech-list">
+            <% category[:technologies].each do |tech| %>
+              <div class="tech-item">
+                <div class="tech-name"><%= tech[:name] %></div>
+                <div class="tech-description"><%= tech[:description] %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Development Philosophy -->
+<section class="use-cases-section">
+  <div class="container">
+    <h2 class="section-title">Development Philosophy</h2>
+    <div class="use-cases-grid">
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="target"></i>
+          </div>
+          <h3 class="use-case-title">Intentional Issues</h3>
+        </div>
+        <p class="use-case-description">
+          Performance problems are deliberately included to create realistic learning scenarios.
+        </p>
+        <ul class="use-case-benefits">
+          <li>N+1 queries for optimization practice</li>
+          <li>Missing indexes to identify bottlenecks</li>
+          <li>Inefficient database queries</li>
+          <li>Memory usage optimization opportunities</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="book-open"></i>
+          </div>
+          <h3 class="use-case-title">Learning-First Design</h3>
+        </div>
+        <p class="use-case-description">
+          Every feature is designed with educational value and skill development in mind.
+        </p>
+        <ul class="use-case-benefits">
+          <li>Clear examples of common anti-patterns</li>
+          <li>Realistic business logic complexity</li>
+          <li>Comprehensive test coverage examples</li>
+          <li>Documentation of optimization opportunities</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <h3 class="use-case-title">Safe Environment</h3>
+        </div>
+        <p class="use-case-description">
+          Experiment freely without real-world consequences or data concerns.
+        </p>
+        <ul class="use-case-benefits">
+          <li>Isolated development environment</li>
+          <li>Realistic but fake data</li>
+          <li>No production dependencies</li>
+          <li>Reset capabilities for clean testing</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <h3 class="use-case-title">Progressive Complexity</h3>
+        </div>
+        <p class="use-case-description">
+          Features range from basic to advanced, accommodating different skill levels.
+        </p>
+        <ul class="use-case-benefits">
+          <li>Simple CRUD operations</li>
+          <li>Complex business logic scenarios</li>
+          <li>Advanced optimization challenges</li>
+          <li>Scalability considerations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Important Notice -->
+<section class="notice-section">
+  <div class="container">
+    <div class="notice-content">
+      <div class="notice-warning">
+        <h3 class="notice-title">⚠️ Important Notice</h3>
+        <p class="notice-text">
+          <strong>NOT production-ready.</strong> This application contains intentional performance issues, 
+          security vulnerabilities, and anti-patterns for educational purposes only.
+        </p>
+      </div>
+      
+      <h2 class="cta-title">Ready to Learn?</h2>
+      <p class="cta-subtitle">
+        Start exploring HourBench to discover optimization opportunities, 
+        learn modern Rails practices, and enhance your development skills.
+      </p>
+      
+      <div class="cta-actions">
+        <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-large" %>
+        <%= link_to "View Features", features_path, class: "btn btn-secondary btn-large" %>
+      </div>
+    </div>
+  </div>
+</section>

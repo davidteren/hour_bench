@@ -1,0 +1,159 @@
+<% content_for :title, "Features" %>
+<% content_for :description, "Comprehensive overview of HourBench features including time tracking, project management, team collaboration, and learning opportunities." %>
+
+<!-- Features Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Comprehensive
+        <span class="hero-accent">Features</span>
+      </h1>
+      <p class="hero-subtitle">
+        Explore the full range of capabilities designed for learning, assessment, and real-world project management scenarios.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Detailed Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <% @features.each_with_index do |feature, index| %>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="<%= feature[:icon] %>"></i>
+          </div>
+          <h3 class="feature-title"><%= feature[:title] %></h3>
+          <p class="feature-description"><%= feature[:description] %></p>
+          <% if feature[:details] %>
+            <div class="feature-details">
+              <p><%= feature[:details] %></p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Learning Features Section -->
+<section class="use-cases-section">
+  <div class="container">
+    <h2 class="section-title">Learning & Assessment Features</h2>
+    <div class="use-cases-grid">
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="zap"></i>
+          </div>
+          <h3 class="use-case-title">Performance Challenges</h3>
+        </div>
+        <p class="use-case-description">Intentional performance issues for educational purposes</p>
+        <ul class="use-case-benefits">
+          <li>N+1 query problems to identify and fix</li>
+          <li>Missing database indexes for optimization practice</li>
+          <li>Inefficient joins and aggregations</li>
+          <li>Memory usage optimization opportunities</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="monitor"></i>
+          </div>
+          <h3 class="use-case-title">Monitoring & Analytics</h3>
+        </div>
+        <p class="use-case-description">Built-in performance monitoring and insights</p>
+        <ul class="use-case-benefits">
+          <li>AppSignal integration for real-time monitoring</li>
+          <li>Performance metrics and bottleneck identification</li>
+          <li>Error tracking and debugging tools</li>
+          <li>Custom performance dashboards</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="code"></i>
+          </div>
+          <h3 class="use-case-title">Modern Rails Features</h3>
+        </div>
+        <p class="use-case-description">Latest Rails 8 features and best practices</p>
+        <ul class="use-case-benefits">
+          <li>Solid Queue for background job processing</li>
+          <li>Solid Cache for high-performance caching</li>
+          <li>Solid Cable for real-time features</li>
+          <li>Built-in authentication system</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="shield"></i>
+          </div>
+          <h3 class="use-case-title">Security & Authorization</h3>
+        </div>
+        <p class="use-case-description">Comprehensive security and role-based access control</p>
+        <ul class="use-case-benefits">
+          <li>Pundit-based authorization system</li>
+          <li>Role-based permissions (Admin, User, Freelancer)</li>
+          <li>User impersonation for testing</li>
+          <li>Secure session management</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="test-tube"></i>
+          </div>
+          <h3 class="use-case-title">Testing Infrastructure</h3>
+        </div>
+        <p class="use-case-description">Comprehensive testing setup for quality assurance</p>
+        <ul class="use-case-benefits">
+          <li>Minitest for unit and integration testing</li>
+          <li>Playwright for end-to-end browser testing</li>
+          <li>Fixtures and Faker for realistic test data</li>
+          <li>Performance testing with large datasets</li>
+        </ul>
+      </div>
+
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">
+            <i data-lucide="smartphone"></i>
+          </div>
+          <h3 class="use-case-title">Modern Frontend</h3>
+        </div>
+        <p class="use-case-description">Contemporary frontend technologies and patterns</p>
+        <ul class="use-case-benefits">
+          <li>Hotwire (Turbo + Stimulus) for modern interactions</li>
+          <li>Custom CSS with Apple-inspired design</li>
+          <li>Dark/light theme support</li>
+          <li>Responsive design for all devices</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">Experience These Features</h2>
+      <p class="cta-subtitle">
+        Try the demo to explore all features hands-on with different user roles and scenarios.
+      </p>
+      <div class="cta-actions">
+        <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-large" %>
+        <%= link_to "Back to Home", root_path, class: "btn btn-secondary btn-large" %>
+      </div>
+    </div>
+  </div>
+</section>
