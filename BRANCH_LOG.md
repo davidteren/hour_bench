@@ -24,9 +24,9 @@ This document tracks all snapshot branches created for the HourBench project. Th
 
 ### snapshot/2025-01-15/baseline-with-known-issues
 
-**Created**: January 15, 2025  
-**From Branch**: main  
-**Commit**: [To be filled when branch is created]  
+**Created**: January 15, 2025
+**From Branch**: main
+**Commit**: 7d8d428 - "Add systematic branching strategy documentation"
 **Project State**: ~70% complete
 
 #### Purpose
