@@ -1,0 +1,171 @@
+/*
+ * Status Indicators
+ * Status badges and indicators
+ */
+
+/* Base Status Indicator */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0.25rem var(--spacing-xs);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Status Variants */
+.status-running {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-success {
+  background-color: rgba(5, 150, 105, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.status-warning {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.status-error {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.status-stopped {
+  background-color: rgba(113, 128, 150, 0.1);
+  color: var(--color-text-tertiary);
+  border: 1px solid rgba(113, 128, 150, 0.2);
+}
+
+.status-active {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--color-accent-primary);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Timer Status */
+.timer-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.timer-pulse {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: var(--color-success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.timer-text {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Role Status Indicators */
+.role-system-admin {
+  @apply status-error;
+}
+
+.role-org-admin {
+  @apply status-running;
+}
+
+.role-team-admin {
+  @apply status-success;
+}
+
+.role-user {
+  @apply status-stopped;
+}
+
+.role-freelancer {
+  @apply status-warning;
+}
+
+/* Project Status */
+.project-status-active {
+  @apply status-running;
+}
+
+.project-status-completed {
+  @apply status-success;
+}
+
+.project-status-on-hold {
+  @apply status-warning;
+}
+
+.project-status-cancelled {
+  @apply status-error;
+}
+
+/* Tech Badges */
+.tech-badge {
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-secondary);
+  padding: 0.25rem var(--spacing-xs);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* Status Dots */
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: var(--spacing-xs);
+}
+
+.status-dot-running {
+  background-color: var(--color-success);
+  animation: pulse 2s infinite;
+}
+
+.status-dot-success {
+  background-color: var(--color-success);
+}
+
+.status-dot-warning {
+  background-color: var(--color-warning);
+}
+
+.status-dot-error {
+  background-color: var(--color-error);
+}
+
+.status-dot-stopped {
+  background-color: var(--color-text-tertiary);
+}
