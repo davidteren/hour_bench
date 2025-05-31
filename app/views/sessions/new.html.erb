@@ -47,7 +47,7 @@
     </div>
 
     <!-- Development Quick Login Section -->
-    <% if Rails.env.development? && ENV['SHOW_TEST_CREDENTIALS'] == 'true' %>
+    <% if ENV['SHOW_TEST_CREDENTIALS'] == 'true' %>
       <div class="quick-login-section">
         <div class="quick-login-header">
           <h3 class="quick-login-title">
