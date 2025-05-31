@@ -1,11 +1,11 @@
-<div style="max-width: 64rem; margin: 0 auto; padding: 0 1.5rem;">
-  <div style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+<div class="content-container-lg">
+  <div class="content-header">
+    <div class="content-header-flex">
       <div>
-        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Time Log Details</h1>
-        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;"><%= @time_log.project.name %></p>
+        <h1 class="content-title">Time Log Details</h1>
+        <p class="content-subtitle"><%= @time_log.project.name %></p>
       </div>
-      <div style="display: flex; gap: 0.75rem;">
+      <div class="flex-center gap-sm">
         <% if policy(@time_log).update? %>
           <%= link_to "Edit", edit_time_log_path(@time_log),
               class: "btn btn-secondary" %>

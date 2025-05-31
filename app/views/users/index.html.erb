@@ -1,13 +1,13 @@
-<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+<div class="content-container">
   <!-- Header -->
-  <div style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="content-header">
+    <div class="content-header-flex">
       <div>
-        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Users</h1>
-        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Manage users and their access</p>
+        <h1 class="content-title">Users</h1>
+        <p class="content-subtitle">Manage users and their access</p>
       </div>
       <% if policy(User).create? %>
-        <%= link_to new_user_path, class: "btn btn-primary", id: "new-user-btn", style: "display: flex; align-items: center; gap: 0.5rem;" do %>
+        <%= link_to new_user_path, class: "btn btn-primary flex-center gap-sm", id: "new-user-btn" do %>
           <%= lucide_icon "user-plus", size: 16 %>
           New User
         <% end %>
@@ -16,18 +16,17 @@
   </div>
 
   <!-- Filters -->
-  <div class="card" style="margin-bottom: 1.5rem;">
-    <%= form_with url: users_path, method: :get, local: true, style: "display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;" do |form| %>
-      <div style="flex: 1; min-width: 16rem;">
+  <div class="card mb-xl">
+    <%= form_with url: users_path, method: :get, local: true, class: "filter-form" do |form| %>
+      <div class="filter-group" style="flex: 1; min-width: 16rem;">
         <%= form.text_field :search,
             value: params[:search],
             placeholder: "Search by name or email...",
-            style: "width: 100%; padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
-            onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
-            onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" %>
+            class: "filter-input",
+            style: "width: 100%;" %>
       </div>
 
-      <div>
+      <div class="filter-group">
         <%= form.select :role,
             options_for_select([
               ['All Roles', ''],
@@ -38,23 +37,19 @@
               ['Freelancer', '4']
             ], params[:role]),
             {},
-            { style: "padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
-              onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
-              onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" } %>
+            { class: "filter-input" } %>
       </div>
 
       <% if Current.user.system_admin? %>
-        <div>
+        <div class="filter-group">
           <%= form.select :organization_id,
               options_from_collection_for_select(Organization.all, :id, :name, params[:organization_id]),
               { prompt: 'All Organizations' },
-              { style: "padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-family-primary);",
-                onfocus: "this.style.outline='none'; this.style.borderColor='var(--color-accent-primary)'; this.style.boxShadow='0 0 0 2px rgba(99, 102, 241, 0.2)'",
-                onblur: "this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'" } %>
+              { class: "filter-input" } %>
         </div>
       <% end %>
 
-      <div style="display: flex; gap: 0.5rem;">
+      <div class="flex-center gap-sm">
         <%= form.submit "Filter", class: "btn btn-primary" %>
         <%= link_to "Clear", users_path, class: "btn btn-secondary" %>
       </div>
