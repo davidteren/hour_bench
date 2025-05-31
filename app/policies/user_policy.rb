@@ -1,6 +1,8 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    user.can_manage_organization? || user.can_manage_team?
+    # If impersonating, use the real user's permissions for admin actions
+    effective_user = Current.impersonating? ? Current.real_user : user
+    effective_user.can_manage_organization? || effective_user.can_manage_team?
   end
 
   def show?
@@ -32,12 +34,15 @@ class UserPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.system_admin?
+      # If impersonating, use the real user's permissions for admin actions
+      effective_user = Current.impersonating? ? Current.real_user : user
+
+      if effective_user.system_admin?
         scope.all
-      elsif user.org_admin?
-        scope.where(organization: user.organization)
-      elsif user.team_admin?
-        scope.where(team: user.team)
+      elsif effective_user.org_admin?
+        scope.where(organization: effective_user.organization)
+      elsif effective_user.team_admin?
+        scope.where(team: effective_user.team)
       else
         scope.where(id: user.id)
       end

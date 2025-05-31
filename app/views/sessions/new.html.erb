@@ -47,7 +47,7 @@
     </div>
 
     <!-- Development Quick Login Section -->
-    <% if ENV['SHOW_TEST_CREDENTIALS'] == 'true' %>
+    <% unless ENV['SHOW_TEST_CREDENTIALS'] == 'false' %>
       <div class="quick-login-section">
         <div class="quick-login-header">
           <h3 class="quick-login-title">
@@ -64,7 +64,7 @@
               <%= lucide_icon "shield", size: 16 %>
               System Admin
             </h4>
-            <button onclick="quickLogin('admin@hours.com', 'password123')"
+            <button onclick="quickLogin('admin@hourbench.com', 'password123')"
                     class="quick-login-btn admin btn-full">
               Login as System Admin
             </button>

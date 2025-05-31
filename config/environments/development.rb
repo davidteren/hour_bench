@@ -83,5 +83,6 @@ Rails.application.configure do
   # Development Testing Configuration
   # Set SHOW_TEST_CREDENTIALS=true to enable quick login buttons on the login page
   # This displays test user credentials for easy role-based testing and impersonation
-  # Example: SHOW_TEST_CREDENTIALS=true rails server
+  # Example:
+  # SHOW_TEST_CREDENTIALS=true rails server
 end
