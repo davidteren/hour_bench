@@ -1,30 +1,28 @@
-<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+<div class="dashboard-container">
   <!-- Header -->
-  <div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Dashboard</h1>
-    <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <p class="dashboard-subtitle">
       Welcome back, <%= @current_user.display_name %>!
-      <span style="font-size: 0.875rem; color: var(--color-text-tertiary); font-weight: 500; padding: 0.25rem 0.75rem; background-color: var(--color-surface-secondary); border-radius: 9999px; margin-left: 0.5rem;">
+      <span class="status-indicator status-active">
         <%= @current_user.role_name %>
       </span>
     </p>
   </div>
 
   <!-- Stats Cards -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+  <div class="dashboard-stats">
     <% @stats.each do |key, value| %>
-      <div class="card-compact" style="transition: transform 0.2s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="display: flex; align-items: center;">
-          <div style="flex-shrink: 0;">
-            <div style="width: 3rem; height: 3rem; background-color: var(--color-accent-primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: white; transition: transform 0.2s ease;">
-              <%= lucide_icon stat_icon_name(key), size: 24, class: "text-white " %>
-            </div>
+      <div class="dashboard-stat-card">
+        <div class="dashboard-stat-content">
+          <div class="dashboard-stat-icon">
+            <%= lucide_icon stat_icon_name(key), size: 24, class: "text-white" %>
           </div>
-          <div style="margin-left: 1.25rem; flex: 1; min-width: 0;">
-            <div style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <div class="dashboard-stat-info">
+            <div class="dashboard-stat-label">
               <%= key.to_s.humanize %>
             </div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-text-primary); margin-top: 0.25rem;">
+            <div class="dashboard-stat-value">
               <%= format_stat_value(key, value) %>
             </div>
           </div>
@@ -33,23 +31,23 @@
     <% end %>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+  <div class="grid gap-xl">
+    <div class="grid-auto-fit-lg">
       <!-- Quick Actions -->
       <div class="card">
-        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--color-text-primary); margin: 0;">Quick Actions</h3>
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="flex flex-col gap-md">
         <% if @running_timer %>
-          <div class="surface" style="background-color: var(--color-surface-secondary); border: 1px solid var(--color-border); padding: 1rem; border-radius: var(--radius-lg);">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div class="surface-secondary p-lg">
+            <div class="flex items-center justify-between">
               <div>
-                <h4 style="font-weight: 600; color: var(--color-success); margin: 0;">Timer Running</h4>
-                <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.25rem 0;">
+                <h4 class="font-semibold text-success m-0">Timer Running</h4>
+                <p class="text-sm text-secondary mt-xs mb-xs">
                   <%= @running_timer.project.name %> - <%= @running_timer.description %>
                 </p>
-                <p style="font-size: 0.75rem; color: var(--color-text-tertiary); margin: 0.25rem 0;">
+                <p class="text-xs text-tertiary mt-xs mb-xs">
                   Started: <%= time_ago_in_words(@running_timer.start_time) %> ago
                 </p>
               </div>
@@ -60,23 +58,23 @@
             </div>
           </div>
         <% else %>
-          <%= link_to new_time_log_path, class: "btn btn-primary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+          <%= link_to new_time_log_path, class: "btn btn-primary btn-full" do %>
             <%= lucide_icon "play", size: 16 %>
             Start New Timer
           <% end %>
         <% end %>
 
-        <%= link_to time_logs_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+        <%= link_to time_logs_path, class: "btn btn-secondary btn-full" do %>
           <%= lucide_icon "clock", size: 16 %>
           View All Time Logs
         <% end %>
 
-        <%= link_to projects_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+        <%= link_to projects_path, class: "btn btn-secondary btn-full" do %>
           <%= lucide_icon "clipboard-list", size: 16 %>
           Browse Projects
         <% end %>
 
-        <%= link_to reports_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" do %>
+        <%= link_to reports_path, class: "btn btn-secondary btn-full" do %>
           <%= lucide_icon "bar-chart-3", size: 16 %>
           View Reports
         <% end %>
