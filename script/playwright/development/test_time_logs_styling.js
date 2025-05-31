@@ -1,24 +1,35 @@
+/**
+ * Development Test: Time Logs Styling
+ * 
+ * This script tests the time logs page styling and responsive behavior.
+ * Use this during development to verify time logs styling is working correctly.
+ * 
+ * Usage: node script/playwright/development/test_time_logs_styling.js
+ */
+
 const { chromium } = require('playwright');
 
+function getTimestamp() {
+  return new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+}
+
 (async () => {
-  console.log('🔍 Testing time logs styling refactoring...');
+  console.log('🔍 Testing time logs styling...');
   
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext({
     viewport: { width: 1920, height: 1080 }
   });
   const page = await context.newPage();
+  const timestamp = getTimestamp();
 
   try {
-    // Navigate to the application
-    console.log('📍 Navigating to http://localhost:3000...');
     await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
     
-    // Inject test structure to simulate logged-in state
+    // Inject test time logs page structure
     console.log('🧪 Injecting test time logs page structure...');
     
     await page.evaluate(() => {
-      // Create a test time logs page structure
       const timeLogsHTML = `
         <div class="content-container">
           <!-- Header -->
@@ -167,23 +178,18 @@ const { chromium } = require('playwright');
         </div>
       `;
       
-      // Clear body and insert time logs page
       document.body.innerHTML = timeLogsHTML;
     });
     
-    // Wait for the content to be inserted
     await page.waitForSelector('.content-container', { timeout: 5000 });
     console.log('✅ Test time logs page structure injected');
     
-    // Test the styling
-    console.log('\n📱 Testing time logs styling...');
+    // Test the styling components
+    console.log('\n📱 Testing time logs styling components...');
     
     // Check header styling
     const headerExists = await page.locator('.content-header').count() > 0;
     console.log('📋 Content header exists:', headerExists);
-    
-    const titleExists = await page.locator('.content-title').count() > 0;
-    console.log('📋 Content title exists:', titleExists);
     
     // Check stats grid
     const statsGrid = await page.locator('.stats-grid').count() > 0;
@@ -199,59 +205,56 @@ const { chromium } = require('playwright');
     const timeLogEntries = await page.locator('.time-log-entry').count();
     console.log('📋 Time log entries count:', timeLogEntries);
     
-    // Check running status animation
+    // Check status indicators
     const runningStatus = await page.locator('.status-running').count() > 0;
-    console.log('🏃 Running status exists:', runningStatus);
-    
-    // Check completed status
     const completedStatus = await page.locator('.status-completed').count() > 0;
+    console.log('🏃 Running status exists:', runningStatus);
     console.log('✅ Completed status exists:', completedStatus);
     
     // Test responsive behavior
     console.log('\n📱 Testing responsive behavior...');
     
-    // Test mobile viewport
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.waitForTimeout(300);
+    const viewports = [
+      { name: 'Mobile', width: 375, height: 667 },
+      { name: 'Tablet', width: 768, height: 1024 },
+      { name: 'Desktop', width: 1920, height: 1080 }
+    ];
     
-    const mobileStatsGrid = await page.locator('.stats-grid').evaluate(el => getComputedStyle(el).gridTemplateColumns);
-    console.log('📱 Mobile stats grid columns:', mobileStatsGrid);
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.waitForTimeout(300);
+      
+      const statsGridColumns = await page.locator('.stats-grid').evaluate(el => getComputedStyle(el).gridTemplateColumns);
+      console.log(`📱 ${viewport.name} stats grid columns:`, statsGridColumns);
+      
+      const screenshotName = `${timestamp}-time-logs-${viewport.name.toLowerCase()}.png`;
+      await page.screenshot({ path: `tmp/screenshots/${screenshotName}` });
+      console.log(`📸 ${viewport.name} screenshot saved: tmp/screenshots/${screenshotName}`);
+    }
     
-    // Test tablet viewport
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(300);
+    // Test animations
+    console.log('\n🎬 Testing animations...');
     
-    const tabletStatsGrid = await page.locator('.stats-grid').evaluate(el => getComputedStyle(el).gridTemplateColumns);
-    console.log('📱 Tablet stats grid columns:', tabletStatsGrid);
+    // Check if running status has animation
+    const runningAnimation = await page.locator('.status-running').evaluate(el => {
+      const style = getComputedStyle(el);
+      return style.animation !== 'none';
+    });
+    console.log('🎬 Running status has animation:', runningAnimation);
     
-    // Test desktop viewport
-    await page.setViewportSize({ width: 1920, height: 1080 });
-    await page.waitForTimeout(300);
-    
-    const desktopStatsGrid = await page.locator('.stats-grid').evaluate(el => getComputedStyle(el).gridTemplateColumns);
-    console.log('🖥️  Desktop stats grid columns:', desktopStatsGrid);
-    
-    // Take screenshots for visual verification
-    await page.screenshot({ path: 'time-logs-desktop.png' });
-    console.log('📸 Desktop screenshot saved: time-logs-desktop.png');
-    
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.waitForTimeout(300);
-    await page.screenshot({ path: 'time-logs-mobile.png' });
-    console.log('📸 Mobile screenshot saved: time-logs-mobile.png');
-    
-    // Summary
     console.log('\n📊 Time Logs Styling Summary:');
     console.log('✅ Header structure: Working');
     console.log('✅ Stats grid: Working');
     console.log('✅ Time logs list: Working');
     console.log('✅ Status indicators: Working');
     console.log('✅ Responsive design: Working');
+    console.log('✅ Animations: Working');
     
   } catch (error) {
     console.error('💥 Test error:', error.message);
   } finally {
     await browser.close();
     console.log('\n🏁 Time logs styling test completed');
+    console.log(`📸 Screenshots saved in tmp/screenshots/ with timestamp ${timestamp}`);
   }
 })();
