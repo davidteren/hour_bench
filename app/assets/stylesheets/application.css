@@ -1075,6 +1075,14 @@ select:disabled {
   background-color: var(--color-surface-secondary);
 }
 
+.mobile-menu-icon,
+.mobile-menu-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
 /* Timer Status */
 .timer-pulse {
   width: 0.5rem;
@@ -1164,16 +1172,17 @@ select:disabled {
 
 @media (max-width: 768px) {
   .navbar-mobile-toggle {
-    display: block;
+    display: block !important;
   }
 
   .navbar-nav-desktop {
-    display: none;
+    display: none !important;
   }
 
   .navbar-content {
     height: 3.5rem;
     padding: 0 var(--spacing-md);
+    position: relative;
   }
 
   .brand-text {
@@ -1182,6 +1191,36 @@ select:disabled {
 
   .navbar-controls {
     gap: var(--spacing-xs);
+  }
+
+  /* Mobile menu positioning */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    z-index: 50;
+  }
+
+  .mobile-menu.hidden {
+    display: none;
+  }
+
+  .mobile-nav-links {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (min-width: 769px) {
+  .navbar-mobile-toggle {
+    display: none !important;
+  }
+
+  .mobile-menu {
+    display: none !important;
   }
 }
 
