@@ -23,13 +23,13 @@
     </script>
   </head>
 
-  <body data-controller="theme mobile-menu" class="min-h-screen flex flex-col">
+  <body data-controller="theme" class="min-h-screen flex flex-col">
     <% if Current.user %>
       <!-- Navigation -->
-      <nav class="navbar-container">
+      <nav class="navbar-container" data-controller="mobile-menu">
         <div class="navbar-content">
           <!-- Mobile menu button -->
-          <div class="navbar-mobile-toggle" data-controller="mobile-menu">
+          <div class="navbar-mobile-toggle">
             <button type="button" id="mobile-menu-button" class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" data-action="click->mobile-menu#toggle">
               <span class="sr-only">Open main menu</span>
               <span id="mobile-menu-icon" class="mobile-menu-icon">
