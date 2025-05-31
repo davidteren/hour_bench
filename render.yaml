@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: hour-bench
+    env: ruby
+    plan: free
+    region: oregon
+    runtime: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: sqlite3:db/production.sqlite3
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: RENDER
+        value: true
+    disk:
+      name: data
+      mountPath: /opt/render/project/src/db
+      sizeGB: 1
+    healthCheckPath: /up
+    automaticDeploys: true
