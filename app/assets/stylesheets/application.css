@@ -7,19 +7,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* Base Styles */
-@import "base/variables.css";
-@import "base/typography.css";
-@import "base/layout.css";
+/*= require base/variables */
+/*= require base/typography */
+/*= require base/layout */
 
 /* Components */
-@import "components/buttons.css";
-@import "components/cards.css";
-@import "components/forms.css";
-@import "components/navigation.css";
-@import "components/status.css";
-@import "components/theme.css";
+/*= require components/buttons */
+/*= require components/cards */
+/*= require components/forms */
+/*= require components/navigation */
+/*= require components/status */
+/*= require components/theme */
 
 /* Pages */
-@import "pages/auth.css";
-@import "pages/dashboard.css";
-@import "pages/content.css";
+/*= require pages/auth */
+/*= require pages/dashboard */
+/*= require pages/content */

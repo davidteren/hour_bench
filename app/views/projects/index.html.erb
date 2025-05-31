@@ -1,59 +1,53 @@
-<div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;">
+<div class="content-container">
   <!-- Header -->
-  <div style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--color-text-primary); margin: 0; font-family: var(--font-family-primary);">Projects</h1>
-        <p style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 1.125rem;">Manage your projects and track progress</p>
+  <div class="content-header">
+    <div class="page-header-content">
+      <div class="page-header-text">
+        <h1 class="content-title">Projects</h1>
+        <p class="content-subtitle">Manage your projects and track progress</p>
       </div>
       <% if Current.user.can_manage_organization? && @organization && params[:client_id] %>
-        <%= link_to new_organization_client_project_path(@organization, params[:client_id]),
-            class: "btn btn-primary", style: "display: flex; align-items: center; gap: 0.5rem;" do %>
-          <%= lucide_icon "plus", size: 16 %>
-          New Project
-        <% end %>
+        <div class="page-actions">
+          <%= link_to new_organization_client_project_path(@organization, params[:client_id]),
+              class: "btn btn-primary" do %>
+            <%= lucide_icon "plus", size: 16 %>
+            New Project
+          <% end %>
+        </div>
       <% end %>
     </div>
   </div>
 
   <!-- Filters -->
-  <div class="card" style="margin-bottom: 1.5rem;">
-    <div style="display: flex; gap: 1rem;">
+  <div class="filter-bar">
+    <div class="filter-buttons">
       <% base_path = @organization && params[:client_id] ? organization_client_projects_path(@organization, params[:client_id]) : projects_path %>
       <%= link_to "All", base_path,
-          style: "padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: var(--radius-lg); text-decoration: none; #{params[:status].blank? ? 'background-color: var(--color-surface-secondary); color: var(--color-accent-primary);' : 'color: var(--color-text-secondary);'}",
-          onmouseover: "#{params[:status].blank? ? '' : 'this.style.color=\'var(--color-text-primary)\''}",
-          onmouseout: "#{params[:status].blank? ? '' : 'this.style.color=\'var(--color-text-secondary)\''}" %>
+          class: "filter-button #{'active' if params[:status].blank?}" %>
       <%= link_to "Active", "#{base_path}?status=active",
-          style: "padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: var(--radius-lg); text-decoration: none; #{params[:status] == 'active' ? 'background-color: var(--color-surface-secondary); color: var(--color-accent-primary);' : 'color: var(--color-text-secondary);'}",
-          onmouseover: "#{params[:status] == 'active' ? '' : 'this.style.color=\'var(--color-text-primary)\''}",
-          onmouseout: "#{params[:status] == 'active' ? '' : 'this.style.color=\'var(--color-text-secondary)\''}" %>
+          class: "filter-button #{'active' if params[:status] == 'active'}" %>
       <%= link_to "Completed", "#{base_path}?status=completed",
-          style: "padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: var(--radius-lg); text-decoration: none; #{params[:status] == 'completed' ? 'background-color: var(--color-surface-secondary); color: var(--color-accent-primary);' : 'color: var(--color-text-secondary);'}",
-          onmouseover: "#{params[:status] == 'completed' ? '' : 'this.style.color=\'var(--color-text-primary)\''}",
-          onmouseout: "#{params[:status] == 'completed' ? '' : 'this.style.color=\'var(--color-text-secondary)\''}" %>
+          class: "filter-button #{'active' if params[:status] == 'completed'}" %>
       <%= link_to "On Hold", "#{base_path}?status=on_hold",
-          style: "padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: var(--radius-lg); text-decoration: none; #{params[:status] == 'on_hold' ? 'background-color: var(--color-surface-secondary); color: var(--color-accent-primary);' : 'color: var(--color-text-secondary);'}",
-          onmouseover: "#{params[:status] == 'on_hold' ? '' : 'this.style.color=\'var(--color-text-primary)\''}",
-          onmouseout: "#{params[:status] == 'on_hold' ? '' : 'this.style.color=\'var(--color-text-secondary)\''}" %>
+          class: "filter-button #{'active' if params[:status] == 'on_hold'}" %>
     </div>
   </div>
 
   <!-- Projects Grid -->
   <% if @projects.any? %>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+    <div class="content-grid">
       <% @projects.each do |project| %>
-        <div class="card-compact" style="transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--color-text-primary); transition: color 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; margin: 0;">
-              <%= link_to project.name, (@organization && project.client ? organization_client_project_path(@organization, project.client, project) : project_path(project)), style: "text-decoration: none; color: inherit;", onmouseover: "this.style.color='var(--color-accent-primary)'", onmouseout: "this.style.color='var(--color-text-primary)'" %>
+        <div class="project-card">
+          <div class="project-header">
+            <h3 class="project-title">
+              <%= link_to project.name, (@organization && project.client ? organization_client_project_path(@organization, project.client, project) : project_path(project)) %>
             </h3>
             <div class="status-indicator <%= case project.status
-                when 'active' then 'status-running'
-                when 'completed' then 'status-success'
-                when 'on_hold' then 'status-warning'
+                when 'active' then 'project-status-active'
+                when 'completed' then 'project-status-completed'
+                when 'on_hold' then 'project-status-on-hold'
                 else 'status-stopped'
-                end %>" style="margin-left: 1rem;">
+                end %>">
               <%= project.status.humanize %>
             </div>
           </div>
