@@ -49,6 +49,23 @@ module Authentication
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_id)
+      
+      # Clear impersonation state on logout
+      if Current.impersonating?
+        # Store the real user ID before clearing
+        real_user_id = Current.real_user&.id
+        
+        # Clear impersonation state
+        session.delete(:impersonator_id)
+        session[:user_id] = real_user_id if real_user_id.present?
+        
+        # Reset Current attributes
+        Current.impersonator_id = nil
+        Current.impersonated_user_id = nil
+      else
+        # Just clear the session user ID
+        session.delete(:user_id)
+      end
     end
 
     def set_impersonation_context
@@ -59,8 +76,14 @@ module Authentication
     end
 
     def stop_impersonation
+      # Store the real user ID before clearing
+      real_user_id = Current.real_user&.id
+      
+      # Clear impersonation state
       session.delete(:impersonator_id)
-      session.delete(:user_id)
+      session[:user_id] = real_user_id if real_user_id.present?
+      
+      # Reset Current attributes
       Current.impersonator_id = nil
       Current.impersonated_user_id = nil
     end

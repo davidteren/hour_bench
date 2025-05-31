@@ -76,13 +76,25 @@ class UsersController < ApplicationController
   def impersonate
     authorize @user
 
+    # If already impersonating, don't allow nested impersonation
+    if Current.impersonating?
+      redirect_to users_path, alert: "You cannot impersonate while already impersonating another user."
+      return
+    end
+
     unless Current.real_user.can_impersonate?
       redirect_to users_path, alert: "You are not authorized to impersonate users."
       return
     end
 
+    # Store the real user's ID in the session
     session[:impersonator_id] = Current.real_user.id
     session[:user_id] = @user.id
+    
+    # Update Current attributes for this request
+    Current.impersonator_id = Current.real_user.id
+    Current.impersonated_user_id = @user.id
+    
     redirect_to root_path, notice: "Now impersonating #{@user.display_name}"
   end
 
@@ -92,8 +104,19 @@ class UsersController < ApplicationController
       return
     end
 
-    real_user_name = Current.real_user.display_name
-    stop_impersonation
+    # Store the real user info before clearing
+    real_user = Current.real_user
+    real_user_name = real_user.display_name
+    real_user_id = real_user.id
+    
+    # Clear impersonation session data
+    session.delete(:impersonator_id)
+    session[:user_id] = real_user_id
+    
+    # Clear Current attributes for this request
+    Current.impersonator_id = nil
+    Current.impersonated_user_id = nil
+    
     redirect_to root_path, notice: "Stopped impersonating. Welcome back, #{real_user_name}!"
   end
 
