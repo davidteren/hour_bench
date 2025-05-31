@@ -1,15 +1,17 @@
 Rails.application.routes.draw do
   # Public landing page routes
-  root "landing#index"
   get "features", to: "landing#features"
   get "about", to: "landing#about"
+
+  get "landing/index"
+  root "landing#index"
 
   # Authentication routes (public)
   resource :session
   resources :passwords, param: :token
 
   # Authenticated application routes
-  scope '/app' do
+  scope "/app" do
     # Dashboard
     get "dashboard", to: "dashboard#index"
     get "", to: "dashboard#index", as: :app_root
