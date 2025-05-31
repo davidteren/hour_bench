@@ -1726,6 +1726,197 @@ select:disabled {
   margin-bottom: var(--spacing-xs);
 }
 
+/* ===== QUICK LOGIN STYLES ===== */
+
+/* Quick Login Section */
+.quick-login-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.quick-login-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.quick-login-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.quick-login-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.quick-login-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.quick-login-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.quick-login-group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-text-secondary);
+}
+
+.quick-login-group-title.admin {
+  color: var(--color-accent-primary);
+}
+
+.quick-login-group-title.org-admin {
+  color: #2563eb;
+}
+
+.quick-login-group-title.team-admin {
+  color: var(--color-success);
+}
+
+.quick-login-group-title.regular {
+  color: #7c3aed;
+}
+
+.quick-login-group-title.freelancer {
+  color: #ea580c;
+}
+
+.quick-login-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.quick-login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-login-btn.admin {
+  background-color: var(--color-accent-primary);
+  color: white;
+  border-color: var(--color-accent-primary);
+}
+
+.quick-login-btn.admin:hover {
+  background-color: var(--color-accent-secondary);
+  border-color: var(--color-accent-secondary);
+}
+
+.quick-login-btn.btn-full {
+  width: 100%;
+}
+
+.quick-login-user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.quick-login-user-btn {
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  border: 1px solid transparent;
+}
+
+.quick-login-user-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-login-user-btn.org-admin {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.quick-login-user-btn.org-admin:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.quick-login-user-btn.team-admin {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.quick-login-user-btn.team-admin:hover {
+  background-color: #047857;
+  border-color: #047857;
+}
+
+.quick-login-user-btn.regular {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.quick-login-user-btn.regular:hover {
+  background-color: #6d28d9;
+  border-color: #6d28d9;
+}
+
+.quick-login-user-btn.freelancer {
+  background-color: #ea580c;
+  border-color: #ea580c;
+}
+
+.quick-login-user-btn.freelancer:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .quick-login-section {
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+  }
+
+  .quick-login-user-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-login-groups {
+    gap: var(--spacing-md);
+  }
+}
+
 /* ===== NAVIGATION STYLES ===== */
 
 /* Navigation Bar */
