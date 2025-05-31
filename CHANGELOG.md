@@ -8,13 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Systematic branching strategy for preserving project snapshots
-- CHANGELOG.md for tracking major changes and milestones
-- BRANCH_LOG.md for tracking snapshot branches
-- Documentation for snapshot branch naming conventions
+- User impersonation functionality for system administrators
+- Complete impersonation UI with banner and stop functionality
+- Comprehensive test coverage for impersonation flow
+- Mobile styling improvements for dashboard and responsive design
+- Playwright test organization and development scripts
+- Known issues documentation and tracking
+
+### Fixed
+- **Critical**: Impersonation authorization using real user permissions during impersonation
+- **Critical**: Current attributes context setting in request lifecycle
+- **UI**: Dashboard mobile styling - major responsive improvements
+- **UI**: Mobile menu Stimulus controller scope issues
+- **Testing**: Fixed failing impersonation tests and integration flows
+- **Testing**: Removed deprecated `assigns` method usage from tests
 
 ### Changed
-- Enhanced PROJECT_SUMMARY.md with branching strategy documentation
+- UserPolicy now uses effective user permissions for admin actions during impersonation
+- Improved test structure for impersonation functionality
+- Enhanced mobile responsiveness across time logs and users views
+- Organized Playwright test scripts for better development workflow
+
+### Removed
+- Incomplete AppSignal MCP optimization branch (optimize/appsignal-mcp-test)
+- Merged styling refactoring branch after successful rebase
 
 ## [0.7.0] - 2025-01-15 - Initial Snapshot Baseline
 
@@ -23,11 +40,13 @@ This represents the initial baseline state of the HourBench project at approxima
 
 ### Features Implemented ✅
 - **Authentication & Authorization**: Rails 8 built-in authentication with Pundit-based role system
+- **User Administration**: Complete user management with impersonation functionality for system admins
 - **Time Tracking**: Complete timer functionality with start/stop, time entry CRUD operations
 - **Project Management**: Full CRUD operations, issue tracking, project status management
 - **Client Management**: Complete client CRUD with search, filters, and profile management
 - **Performance Monitoring**: AppSignal integration for error tracking and performance analysis
 - **UI Design System**: Apple-inspired minimal design with custom CSS (no external frameworks)
+- **Mobile Responsiveness**: Improved mobile styling for dashboard and core views
 
 ### Known Performance Issues (Intentional) 🐛
 - **N+1 Queries**: 
@@ -54,7 +73,6 @@ This represents the initial baseline state of the HourBench project at approxima
 - Areas that break under load
 
 ### Missing Features ❌
-- User Administration UI (UsersController + impersonation interface)
 - Document Management (ActiveStorage integration, file uploads, versioning)
 - Comprehensive Reporting & Billing (time reports, invoices, rate management)
 - Calendar View (monthly view, drag-and-drop entries)
