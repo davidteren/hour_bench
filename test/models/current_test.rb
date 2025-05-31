@@ -25,7 +25,7 @@ class CurrentTest < ActiveSupport::TestCase
   test "user returns impersonated user when impersonating" do
     Current.impersonator_id = @admin.id
     Current.impersonated_user_id = @user.id
-    
+
     assert_equal @user.id, Current.user.id
   end
 
@@ -34,14 +34,14 @@ class CurrentTest < ActiveSupport::TestCase
     Current.session = session
     Current.impersonator_id = nil
     Current.impersonated_user_id = nil
-    
+
     assert_equal @admin, Current.user
   end
 
   test "real_user returns impersonator when impersonating" do
     Current.impersonator_id = @admin.id
     Current.impersonated_user_id = @user.id
-    
+
     assert_equal @admin.id, Current.real_user.id
   end
 
@@ -50,45 +50,45 @@ class CurrentTest < ActiveSupport::TestCase
     Current.session = session
     Current.impersonator_id = nil
     Current.impersonated_user_id = nil
-    
+
     assert_equal @user, Current.real_user
   end
 
   test "impersonating? returns true when both ids are present" do
     Current.impersonator_id = @admin.id
     Current.impersonated_user_id = @user.id
-    
+
     assert Current.impersonating?
   end
 
   test "impersonating? returns false when ids are not present" do
     Current.impersonator_id = nil
     Current.impersonated_user_id = nil
-    
+
     assert_not Current.impersonating?
   end
 
   test "impersonating? returns false when only one id is present" do
     Current.impersonator_id = @admin.id
     Current.impersonated_user_id = nil
-    
+
     assert_not Current.impersonating?
-    
+
     Current.impersonator_id = nil
     Current.impersonated_user_id = @user.id
-    
+
     assert_not Current.impersonating?
   end
 
   test "clearing impersonation state" do
     Current.impersonator_id = @admin.id
     Current.impersonated_user_id = @user.id
-    
+
     assert Current.impersonating?
-    
+
     Current.impersonator_id = nil
     Current.impersonated_user_id = nil
-    
+
     assert_not Current.impersonating?
   end
 end
