@@ -14,12 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mobile styling improvements for dashboard and responsive design
 - Playwright test organization and development scripts
 - Known issues documentation and tracking
+- **Quick Login Improvements**: Enhanced demo login functionality with professional UI and auto-submit
 
 ### Fixed
 - **Critical**: Impersonation authorization using real user permissions during impersonation
 - **Critical**: Current attributes context setting in request lifecycle
 - **UI**: Dashboard mobile styling - major responsive improvements
 - **UI**: Mobile menu Stimulus controller scope issues
+- **UI**: Quick login layout and spacing issues with professional messaging
 - **Testing**: Fixed failing impersonation tests and integration flows
 - **Testing**: Removed deprecated `assigns` method usage from tests
 
