@@ -34,7 +34,7 @@ port ENV.fetch("PORT", 3000)
 environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Use bind to specify server socket
-if ENV["RENDER"].present?
+if ENV["RENDER"] && !ENV["RENDER"].empty?
   bind "unix://#{ENV.fetch('SOCKET_PATH', '/tmp')}/puma.sock"
 end
 
