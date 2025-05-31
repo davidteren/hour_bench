@@ -7,9 +7,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* Base Styles */
-/*= require base/variables */
-/*= require base/typography */
-/*= require base/layout */
+= require base/variables
+= require base/typography
+= require base/layout 
 
 /* Components */
 /*= require components/buttons */
