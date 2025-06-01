@@ -1,0 +1,79 @@
+/*
+ * Card Components
+ * Surface and card-based layouts
+ */
+
+/* Surface Components */
+.surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.surface:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.surface-secondary {
+  background-color: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Card Components */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  padding: var(--spacing-xl);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-compact {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  padding: var(--spacing-lg);
+}
+
+.card-compact:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0.25rem var(--spacing-xs);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-running {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-success {
+  background-color: rgba(5, 150, 105, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.status-active {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--color-accent-primary);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}

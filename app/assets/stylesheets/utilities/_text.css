@@ -1,0 +1,18 @@
+/*
+ * Text Utilities
+ * Typography and text styling utilities
+ */
+
+/* Text Utilities */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-success { color: var(--color-success); }
+.text-white { color: white; }
+
+.text-center { text-align: center; }
+.text-sm { font-size: var(--font-size-sm); }
+.text-xs { font-size: var(--font-size-xs); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+.font-semibold { font-weight: 600; }

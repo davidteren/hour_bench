@@ -1,0 +1,12 @@
+/*
+ * Spacing Utilities
+ * Margin and padding utilities
+ */
+
+/* Spacing Utilities */
+.m-0 { margin: 0; }
+.mt-xs { margin-top: var(--spacing-xs); }
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+.p-lg { padding: var(--spacing-lg); }
