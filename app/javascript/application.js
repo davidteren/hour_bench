@@ -7,4 +7,8 @@ console.log("✅ Turbo loaded")
 import "controllers"
 console.log("✅ Controllers imported")
 
+// Initialize AppSignal frontend monitoring
+import "appsignal"
+console.log("✅ AppSignal frontend monitoring loaded")
+
 console.log("🎯 Application.js loaded successfully")

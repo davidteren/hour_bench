@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
+import { frontendMetrics } from "appsignal"
 
-// Animated stats counter controller
+// Animated stats counter controller with AppSignal metrics
 export default class extends Controller {
   static targets = ["counter"]
   static values = { 
@@ -36,6 +37,12 @@ export default class extends Controller {
   }
   
   startCounters() {
+    // Track stats counter engagement
+    frontendMetrics.trackCustomMetric('stats_counter_viewed', 1, 'counter', {
+      counter_count: this.counterTargets.length,
+      page_url: window.location.pathname
+    })
+    
     setTimeout(() => {
       this.counterTargets.forEach((counter, index) => {
         this.animateCounter(counter, index * 200)
@@ -68,6 +75,12 @@ export default class extends Controller {
           // Ensure we end with the exact target value
           counter.textContent = this.formatNumber(endValue)
           this.addCompletionEffect(counter)
+          
+          // Track animation completion performance
+          frontendMetrics.trackCustomMetric('stats_counter_animation_time', elapsed, 'distribution', {
+            target_value: endValue,
+            animation_delay: delay
+          })
         }
       }
       

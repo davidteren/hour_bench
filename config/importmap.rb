@@ -1,6 +1,7 @@
 # Pin npm packages by running ./bin/importmap
 
 pin "application"
+pin "appsignal", to: "appsignal.js"
 pin "@hotwired/turbo-rails", to: "turbo.min.js"
 pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
@@ -21,3 +22,7 @@ pin "controllers/smooth_scroll_controller"
 pin "controllers/stats_counter_controller"
 pin "controllers/theme_controller"
 pin "controllers/typing_effect_controller"
+pin "@appsignal/javascript", to: "@appsignal--javascript.js" # @1.5.0
+pin "@appsignal/core", to: "@appsignal--core.js" # @1.1.24
+pin "https" # @2.1.0
+pin "tslib" # @2.8.1

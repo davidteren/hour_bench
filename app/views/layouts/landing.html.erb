@@ -26,6 +26,9 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
+    <!-- AppSignal Frontend Configuration -->
+    <%= appsignal_frontend_config %>
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script>
@@ -63,7 +66,7 @@
     <%= content_for :head %>
   </head>
 
-  <body data-controller="theme">
+  <body data-controller="theme appsignal">
     <!-- Landing Page Navigation -->
     <nav class="landing-nav">
       <div class="container">
