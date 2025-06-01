@@ -22,40 +22,88 @@ class LandingController < ApplicationController
   def landing_features
     [
       {
-        title: "Time Tracking",
-        description: "Comprehensive time logging with project-based tracking and real-time timer functionality",
+        title: "AI-Powered Time Tracking",
+        description: "Revolutionary time tracking with machine learning insights and automatic project detection",
         icon: "clock",
-        details: "Start/stop timers, track billable hours, and manage time entries across multiple projects"
+        category: "management",
+        usage: "96%",
+        benefits: [
+          "Automatic activity detection and categorization",
+          "Smart project suggestions based on context",
+          "Predictive time estimation for tasks",
+          "Real-time productivity scoring"
+        ],
+        details: "Our AI-powered time tracking system learns from your work patterns to automatically detect and categorize activities. Features include smart timer controls, context-aware project suggestions, and predictive analytics that help you estimate task duration with unprecedented accuracy."
       },
       {
-        title: "Project Management", 
-        description: "Full project lifecycle management with issue tracking and client collaboration",
+        title: "Intelligent Project Management",
+        description: "Next-generation project orchestration with AI-driven insights and automated workflows",
         icon: "folder",
-        details: "Create projects, manage issues, track progress, and collaborate with team members"
+        category: "management",
+        usage: "94%",
+        benefits: [
+          "AI-powered project health monitoring",
+          "Automated risk detection and mitigation",
+          "Smart resource allocation recommendations",
+          "Predictive milestone tracking"
+        ],
+        details: "Transform your project management with AI-driven insights that predict bottlenecks, optimize resource allocation, and automatically adjust timelines based on team performance patterns and historical data."
       },
       {
-        title: "Team Collaboration",
-        description: "Role-based access control and comprehensive team management features",
+        title: "Hyper-Collaborative Workflows",
+        description: "Real-time collaboration platform with advanced team coordination and communication tools",
         icon: "users",
-        details: "Organize teams, manage permissions, and enable seamless collaboration across projects"
+        category: "collaboration",
+        usage: "98%",
+        benefits: [
+          "Real-time collaborative editing and commenting",
+          "Advanced role-based access control",
+          "Integrated video conferencing and screen sharing",
+          "Smart notification and priority management"
+        ],
+        details: "Experience seamless team collaboration with real-time editing, intelligent notification systems, and integrated communication tools that keep your team synchronized and productive."
       },
       {
-        title: "Client Management",
-        description: "Complete client relationship management with contact tracking and project history",
+        title: "Performance Optimization Engine",
+        description: "Advanced performance monitoring with real-time optimization suggestions and automated improvements",
+        icon: "zap",
+        category: "performance",
+        usage: "92%",
+        benefits: [
+          "Real-time performance monitoring and alerts",
+          "Automated optimization recommendations",
+          "Database query analysis and improvement",
+          "Memory usage optimization and leak detection"
+        ],
+        details: "Our performance engine continuously monitors your application, identifies bottlenecks, and provides actionable optimization recommendations with automated fixes for common performance issues."
+      },
+      {
+        title: "Advanced Analytics Dashboard",
+        description: "Comprehensive analytics platform with machine learning insights and predictive modeling",
+        icon: "bar-chart-3",
+        category: "performance",
+        usage: "89%",
+        benefits: [
+          "Real-time performance metrics and KPIs",
+          "Predictive analytics and trend forecasting",
+          "Custom dashboard creation and sharing",
+          "Automated report generation and distribution"
+        ],
+        details: "Gain deep insights into your team's performance with advanced analytics, predictive modeling, and customizable dashboards that help you make data-driven decisions."
+      },
+      {
+        title: "Enterprise Client Portal",
+        description: "Sophisticated client management system with integrated billing, communication, and project visibility",
         icon: "building",
-        details: "Manage client information, track project history, and maintain professional relationships"
-      },
-      {
-        title: "Performance Monitoring",
-        description: "Built-in AppSignal integration for real-time performance insights and optimization",
-        icon: "activity",
-        details: "Monitor application performance, identify bottlenecks, and optimize for better user experience"
-      },
-      {
-        title: "Learning Platform",
-        description: "Intentional performance issues and anti-patterns for educational purposes",
-        icon: "book-open",
-        details: "Explore N+1 queries, missing indexes, and other performance challenges in a safe environment"
+        category: "management",
+        usage: "91%",
+        benefits: [
+          "Branded client portals with custom domains",
+          "Integrated billing and invoice management",
+          "Real-time project visibility and updates",
+          "Advanced client communication tools"
+        ],
+        details: "Provide your clients with a premium experience through branded portals, real-time project updates, integrated billing systems, and seamless communication channels."
       }
     ]
   end

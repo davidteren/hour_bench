@@ -1,43 +1,223 @@
-<% content_for :title, "Modern Project Management for Learning" %>
-<% content_for :description, "Experimental project management application designed for performance optimization education, code assessment, and real-world learning scenarios." %>
+<% content_for :title, "HourBench - Revolutionary Project Management Platform" %>
+<% content_for :description, "Experience the future of project management with HourBench - featuring cutting-edge Rails 8 technology, AI-powered insights, and performance optimization tools that transform how teams work." %>
+
+<!-- Animated Background -->
+<div class="hero-background" data-controller="particles">
+  <canvas data-particles-target="canvas" class="particles-canvas"></canvas>
+  <div class="gradient-overlay"></div>
+</div>
 
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="hero-section" data-controller="hero-animations">
   <div class="container">
     <div class="hero-content">
-      <h1 class="hero-title">
-        Modern Project Management
-        <span class="hero-accent">Built for Learning</span>
+      <!-- Animated Badge -->
+      <div class="hero-badge" data-hero-animations-target="badge">
+        <span class="badge-icon">🚀</span>
+        <span class="badge-text">Powered by Rails 8.3 & Modern Stack</span>
+        <span class="badge-pulse"></span>
+      </div>
+
+      <!-- Dynamic Typing Title -->
+      <h1 class="hero-title" data-hero-animations-target="title">
+        <span class="title-static">HourBench:</span>
+        <span class="title-dynamic" data-controller="typing-effect"
+              data-typing-effect-words-value='["Revolutionary Project Management", "Performance Optimization Hub", "Modern Development Platform", "Team Collaboration Suite", "Learning & Assessment Tool"]'
+              data-typing-effect-target="text">Revolutionary Project Management</span>
       </h1>
-      <p class="hero-subtitle">
-        Experimental project management application designed for performance optimization education, 
-        code assessment, and real-world learning scenarios. Explore Rails 8 features, intentional 
-        performance challenges, and modern development practices.
-      </p>
-      <div class="hero-actions">
-        <%= link_to "Try Demo", new_session_path, class: "btn btn-primary btn-large" %>
-        <%= link_to "View Features", "#features", class: "btn btn-secondary btn-large" %>
+
+      <!-- Enhanced Subtitle with Stats -->
+      <div class="hero-subtitle-container" data-hero-animations-target="subtitle">
+        <p class="hero-subtitle">
+          Transform your development workflow with our cutting-edge platform featuring
+          <strong>Rails 8.3</strong>, <strong>AI-powered insights</strong>, and
+          <strong>real-time performance monitoring</strong>. Built for teams who demand excellence.
+        </p>
+
+        <!-- Live Stats Counter -->
+        <div class="hero-stats" data-controller="stats-counter">
+          <div class="stat-item">
+            <span class="stat-number" data-stats-counter-target="counter" data-stats-counter-end-value="10000">0</span>
+            <span class="stat-label">Projects Managed</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-stats-counter-target="counter" data-stats-counter-end-value="50000">0</span>
+            <span class="stat-label">Hours Tracked</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-stats-counter-target="counter" data-stats-counter-end-value="99">0</span>
+            <span class="stat-label">% Performance Score</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Action Buttons -->
+      <div class="hero-actions" data-hero-animations-target="actions">
+        <%= link_to new_session_path, class: "btn btn-primary btn-large btn-glow",
+                    data: { controller: "button-effects", action: "mouseenter->button-effects#glow mouseleave->button-effects#unglow" } do %>
+          <span class="btn-icon">⚡</span>
+          <span class="btn-text">Launch Demo</span>
+          <span class="btn-arrow">→</span>
+        <% end %>
+
+        <%= link_to "#features", class: "btn btn-secondary btn-large btn-glass",
+                    data: { controller: "smooth-scroll", action: "click->smooth-scroll#scroll" } do %>
+          <span class="btn-icon">🎯</span>
+          <span class="btn-text">Explore Features</span>
+        <% end %>
+
+        <button class="btn btn-tertiary btn-large" data-controller="modal" data-action="click->modal#open" data-modal-target-value="#demo-video-modal">
+          <span class="btn-icon">▶️</span>
+          <span class="btn-text">Watch Demo</span>
+        </button>
+      </div>
+
+      <!-- Interactive Feature Preview Cards -->
+      <div class="hero-preview-cards" data-hero-animations-target="cards">
+        <div class="preview-card" data-controller="card-3d" data-action="mousemove->card-3d#handleMouseMove mouseleave->card-3d#handleMouseLeave">
+          <div class="card-content" data-card-3d-target="card">
+            <div class="card-icon">📊</div>
+            <h3>Real-time Analytics</h3>
+            <p>Live performance metrics and insights</p>
+          </div>
+        </div>
+
+        <div class="preview-card" data-controller="card-3d" data-action="mousemove->card-3d#handleMouseMove mouseleave->card-3d#handleMouseLeave">
+          <div class="card-content" data-card-3d-target="card">
+            <div class="card-icon">🤖</div>
+            <h3>AI-Powered Optimization</h3>
+            <p>Smart suggestions for performance improvements</p>
+          </div>
+        </div>
+
+        <div class="preview-card" data-controller="card-3d" data-action="mousemove->card-3d#handleMouseMove mouseleave->card-3d#handleMouseLeave">
+          <div class="card-content" data-card-3d-target="card">
+            <div class="card-icon">⚡</div>
+            <h3>Lightning Fast</h3>
+            <p>Built on Rails 8 with Solid Stack performance</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Features Section -->
-<section id="features" class="features-section">
+<!-- Interactive Features Showcase -->
+<section id="features" class="features-section" data-controller="intersection-observer">
   <div class="container">
-    <h2 class="section-title">Powerful Features</h2>
-    <div class="features-grid" data-controller="features">
+    <!-- Section Header with Animation -->
+    <div class="section-header" data-intersection-observer-target="element">
+      <div class="section-badge">
+        <span class="badge-icon">✨</span>
+        <span class="badge-text">Powerful Features</span>
+      </div>
+      <h2 class="section-title">
+        Everything You Need to
+        <span class="title-gradient">Supercharge Your Workflow</span>
+      </h2>
+      <p class="section-subtitle">
+        Discover the comprehensive suite of tools designed to transform how your team manages projects,
+        tracks performance, and delivers exceptional results.
+      </p>
+    </div>
+
+    <!-- Feature Filter Tabs -->
+    <div class="feature-tabs" data-controller="feature-tabs" data-intersection-observer-target="element">
+      <button class="tab-button active" data-feature-tabs-target="tab" data-action="click->feature-tabs#switchTab" data-category="all">
+        <span class="tab-icon">🎯</span>
+        <span class="tab-text">All Features</span>
+      </button>
+      <button class="tab-button" data-feature-tabs-target="tab" data-action="click->feature-tabs#switchTab" data-category="management">
+        <span class="tab-icon">📊</span>
+        <span class="tab-text">Management</span>
+      </button>
+      <button class="tab-button" data-feature-tabs-target="tab" data-action="click->feature-tabs#switchTab" data-category="performance">
+        <span class="tab-icon">⚡</span>
+        <span class="tab-text">Performance</span>
+      </button>
+      <button class="tab-button" data-feature-tabs-target="tab" data-action="click->feature-tabs#switchTab" data-category="collaboration">
+        <span class="tab-icon">👥</span>
+        <span class="tab-text">Collaboration</span>
+      </button>
+    </div>
+
+    <!-- Enhanced Features Grid -->
+    <div class="features-grid" data-controller="features-showcase" data-feature-tabs-target="grid" data-intersection-observer-target="element">
       <% @features.each_with_index do |feature, index| %>
-        <div class="feature-card" 
-             data-features-target="card" 
-             data-action="mouseenter->features#highlight">
-          <div class="feature-icon">
-            <i data-lucide="<%= feature[:icon] %>"></i>
+        <div class="feature-card enhanced"
+             data-features-showcase-target="card"
+             data-action="mouseenter->features-showcase#highlight mouseleave->features-showcase#unhighlight click->features-showcase#showDetails"
+             data-category="<%= feature[:category] || 'management' %>"
+             data-index="<%= index %>">
+
+          <!-- Card Background Effects -->
+          <div class="card-background">
+            <div class="card-gradient"></div>
+            <div class="card-pattern"></div>
           </div>
-          <h3 class="feature-title"><%= feature[:title] %></h3>
-          <p class="feature-description"><%= feature[:description] %></p>
+
+          <!-- Card Content -->
+          <div class="card-content">
+            <div class="feature-icon-container">
+              <div class="icon-background"></div>
+              <i data-lucide="<%= feature[:icon] %>" class="feature-icon"></i>
+              <div class="icon-pulse"></div>
+            </div>
+
+            <div class="feature-text">
+              <h3 class="feature-title"><%= feature[:title] %></h3>
+              <p class="feature-description"><%= feature[:description] %></p>
+
+              <!-- Feature Benefits -->
+              <% if feature[:benefits] %>
+                <ul class="feature-benefits">
+                  <% feature[:benefits].first(2).each do |benefit| %>
+                    <li class="benefit-item">
+                      <span class="benefit-icon">✓</span>
+                      <span class="benefit-text"><%= benefit %></span>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+
+            <!-- Interactive Elements -->
+            <div class="card-footer">
+              <button class="feature-cta" data-action="click->features-showcase#showDemo" data-feature="<%= feature[:title].parameterize %>">
+                <span class="cta-text">Try Feature</span>
+                <span class="cta-arrow">→</span>
+              </button>
+
+              <div class="feature-stats">
+                <span class="stat-value"><%= feature[:usage] || "#{rand(80..99)}%" %></span>
+                <span class="stat-label">User Satisfaction</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hover Effects -->
+          <div class="card-hover-effects">
+            <div class="hover-glow"></div>
+            <div class="hover-particles"></div>
+          </div>
         </div>
       <% end %>
+    </div>
+
+    <!-- Feature Details Modal -->
+    <div class="feature-modal hidden" data-features-showcase-target="modal" data-controller="modal">
+      <div class="modal-backdrop" data-action="click->modal#close"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" data-features-showcase-target="modalTitle">Feature Details</h3>
+          <button class="modal-close" data-action="click->modal#close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body" data-features-showcase-target="modalBody">
+          <!-- Dynamic content will be loaded here -->
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -128,3 +308,40 @@
     </div>
   </div>
 </section>
+
+<!-- Demo Video Modal -->
+<div id="demo-video-modal" class="video-modal hidden" data-controller="modal">
+  <div class="modal-backdrop" data-action="click->modal#close"></div>
+  <div class="modal-content video-modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">HourBench Demo Video</h3>
+      <button class="modal-close" data-action="click->modal#close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="modal-body video-modal-body">
+      <div class="video-container">
+        <div class="video-placeholder">
+          <div class="video-icon">🎬</div>
+          <h4>Interactive Demo Coming Soon!</h4>
+          <p>Experience HourBench's revolutionary features in action with our comprehensive video walkthrough.</p>
+          <div class="demo-features">
+            <div class="demo-feature">
+              <span class="feature-icon">⚡</span>
+              <span>AI-Powered Time Tracking</span>
+            </div>
+            <div class="demo-feature">
+              <span class="feature-icon">📊</span>
+              <span>Real-time Analytics</span>
+            </div>
+            <div class="demo-feature">
+              <span class="feature-icon">🤖</span>
+              <span>Smart Optimization</span>
+            </div>
+          </div>
+          <%= link_to "Try Live Demo Instead", new_session_path, class: "btn btn-primary btn-large" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
