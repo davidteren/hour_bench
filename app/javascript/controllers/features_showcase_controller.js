@@ -10,6 +10,11 @@ export default class extends Controller {
   
   setupCardAnimations() {
     this.cardTargets.forEach((card, index) => {
+      // Set initial state
+      card.style.opacity = '0'
+      card.style.transform = 'translateY(20px)'
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
+      
       // Stagger the initial animation
       setTimeout(() => {
         card.style.opacity = '1'
@@ -82,6 +87,9 @@ export default class extends Controller {
   }
   
   showDetails(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    
     const card = event.currentTarget
     const index = parseInt(card.dataset.index)
     const title = card.querySelector('.feature-title').textContent
@@ -161,6 +169,17 @@ export default class extends Controller {
     setTimeout(() => {
       this.showNotification(`✨ ${feature} demo is ready!`, 'success')
     }, 1500)
+  }
+  
+  closeModal() {
+    // Close the modal
+    this.modalTarget.classList.remove('show')
+    
+    // Hide after animation
+    setTimeout(() => {
+      this.modalTarget.classList.add('hidden')
+      document.body.style.overflow = ''
+    }, 300)
   }
   
   showNotification(message, type = 'info') {

@@ -52,9 +52,10 @@ export default class extends Controller {
   }
 
   updateMenuVisibility() {
-    const menu = document.querySelector('.mobile-menu')
-    const menuIcon = document.querySelector('#mobile-menu-icon')
-    const closeIcon = document.querySelector('#mobile-menu-close')
+    // Use the target if available, otherwise fall back to querySelector
+    const menu = this.hasMenuTarget ? this.menuTarget : document.querySelector('.mobile-menu')
+    const menuIcon = document.querySelector('.mobile-menu-icon')
+    const closeIcon = document.querySelector('.mobile-menu-close')
 
     if (menu) {
       if (this.isOpen) {
@@ -64,13 +65,19 @@ export default class extends Controller {
       }
     }
 
-    if (menuIcon && closeIcon) {
-      if (this.isOpen) {
-        menuIcon.classList.add('hidden')
-        closeIcon.classList.remove('hidden')
-      } else {
-        menuIcon.classList.remove('hidden')
-        closeIcon.classList.add('hidden')
+    // Update button icon if elements exist
+    const button = this.element
+    if (button) {
+      const icon = button.querySelector('i')
+      if (icon && this.isOpen) {
+        icon.setAttribute('data-lucide', 'x')
+      } else if (icon) {
+        icon.setAttribute('data-lucide', 'menu')
+      }
+      
+      // Re-initialize lucide icons
+      if (window.lucide) {
+        window.lucide.createIcons()
       }
     }
   }

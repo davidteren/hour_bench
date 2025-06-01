@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Landing Page</title>
+    <script>
+        // Simple test to check if buttons are clickable
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Test button clicks
+            const buttons = document.querySelectorAll('button, a');
+            console.log('Found buttons:', buttons.length);
+            
+            buttons.forEach((button, index) => {
+                button.addEventListener('click', function(e) {
+                    console.log('Button clicked:', index, button.textContent.trim());
+                    if (button.href && button.href.includes('#')) {
+                        e.preventDefault();
+                        console.log('Prevented default for anchor link');
+                    }
+                });
+            });
+            
+            // Check for Stimulus
+            setTimeout(() => {
+                if (window.Stimulus) {
+                    console.log('✅ Stimulus is loaded');
+                    console.log('Registered controllers:', Object.keys(window.Stimulus.router.modulesByIdentifier));
+                } else {
+                    console.log('❌ Stimulus not found');
+                }
+            }, 1000);
+        });
+    </script>
+</head>
+<body>
+    <h1>Debug Test</h1>
+    <button onclick="alert('Basic button works!')">Test Basic Button</button>
+    <a href="#test" onclick="alert('Link clicked!')">Test Link</a>
+</body>
+</html>

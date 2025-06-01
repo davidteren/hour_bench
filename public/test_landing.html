@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page Button Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { margin: 10px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Landing Page Button Test</h1>
+    <div id="results"></div>
+    
+    <h2>Manual Tests:</h2>
+    <button onclick="testLandingPage()">Test Landing Page Buttons</button>
+    <button onclick="window.open('http://localhost:3000', '_blank')">Open Landing Page</button>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        async function testLandingPage() {
+            addResult('🚀 Starting landing page tests...', 'info');
+            
+            try {
+                // Test if landing page loads
+                const response = await fetch('http://localhost:3000');
+                if (response.ok) {
+                    addResult('✅ Landing page loads successfully', 'success');
+                    
+                    const html = await response.text();
+                    
+                    // Test for button presence
+                    if (html.includes('Launch Demo')) {
+                        addResult('✅ Launch Demo button found in HTML', 'success');
+                    } else {
+                        addResult('❌ Launch Demo button not found', 'error');
+                    }
+                    
+                    // Test for correct data attributes
+                    if (html.includes('data-controller="button-effects"')) {
+                        addResult('✅ Button effects controller found', 'success');
+                    } else {
+                        addResult('❌ Button effects controller not found', 'error');
+                    }
+                    
+                    // Test for unescaped arrows
+                    if (html.includes('mouseenter->button-effects#glow')) {
+                        addResult('✅ Data actions are properly formatted (no HTML escaping)', 'success');
+                    } else if (html.includes('mouseenter-&gt;button-effects#glow')) {
+                        addResult('❌ Data actions are HTML escaped (broken)', 'error');
+                    } else {
+                        addResult('⚠️ Data actions not found', 'error');
+                    }
+                    
+                    // Test for Stimulus controllers
+                    const controllerNames = [
+                        'particles_controller',
+                        'typing_effect_controller', 
+                        'stats_counter_controller',
+                        'hero_animations_controller',
+                        'features_showcase_controller'
+                    ];
+                    
+                    controllerNames.forEach(controller => {
+                        if (html.includes(controller)) {
+                            addResult(`✅ ${controller} found in importmap`, 'success');
+                        } else {
+                            addResult(`❌ ${controller} not found`, 'error');
+                        }
+                    });
+                    
+                } else {
+                    addResult(`❌ Landing page failed to load: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Error testing landing page: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-run tests
+        window.addEventListener('load', testLandingPage);
+    </script>
+</body>
+</html>

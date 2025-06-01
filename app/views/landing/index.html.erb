@@ -53,20 +53,24 @@
 
       <!-- Enhanced Action Buttons -->
       <div class="hero-actions" data-hero-animations-target="actions">
-        <%= link_to new_session_path, class: "btn btn-primary btn-large btn-glow",
-                    data: { controller: "button-effects", action: "mouseenter->button-effects#glow mouseleave->button-effects#unglow" } do %>
+        <!-- Simple test button first -->
+        <a href="/session/new" class="btn btn-primary btn-large btn-glow" 
+           onclick="console.log('Launch Demo clicked!'); return true;">
           <span class="btn-icon">⚡</span>
           <span class="btn-text">Launch Demo</span>
           <span class="btn-arrow">→</span>
-        <% end %>
-
-        <%= link_to "#features", class: "btn btn-secondary btn-large btn-glass",
-                    data: { controller: "smooth-scroll", action: "click->smooth-scroll#scroll" } do %>
+        </a>
+        
+        <a href="#features" class="btn btn-secondary btn-large btn-glass" 
+           data-controller="smooth-scroll" 
+           data-action="click->smooth-scroll#scroll">
           <span class="btn-icon">🎯</span>
           <span class="btn-text">Explore Features</span>
-        <% end %>
-
-        <button class="btn btn-tertiary btn-large" data-controller="modal" data-action="click->modal#open" data-modal-target-value="#demo-video-modal">
+        </a>
+        
+        <!-- Simple test button for modal -->
+        <button class="btn btn-tertiary btn-large" 
+                onclick="console.log('Watch Demo clicked!'); document.getElementById('demo-video-modal').classList.remove('hidden'); document.getElementById('demo-video-modal').classList.add('show');">
           <span class="btn-icon">▶️</span>
           <span class="btn-text">Watch Demo</span>
         </button>

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="theme"
 export default class extends Controller {
-  static targets = ["toggle", "lightIcon", "darkIcon"]
+  static targets = ["toggle"]
 
   connect() {
     // Initialize theme from localStorage or default to light
@@ -38,17 +38,17 @@ export default class extends Controller {
   }
 
   updateIcons(theme) {
-    if (this.hasLightIconTarget && this.hasDarkIconTarget) {
+    // Find theme icons by class since they're not targets
+    const lightIcon = document.querySelector('.theme-icon-light')
+    const darkIcon = document.querySelector('.theme-icon-dark')
+    
+    if (lightIcon && darkIcon) {
       if (theme === 'dark') {
-        this.lightIconTarget.classList.add('hidden')
-        this.lightIconTarget.classList.remove('block')
-        this.darkIconTarget.classList.remove('hidden')
-        this.darkIconTarget.classList.add('block')
+        lightIcon.style.display = 'none'
+        darkIcon.style.display = 'flex'
       } else {
-        this.lightIconTarget.classList.remove('hidden')
-        this.lightIconTarget.classList.add('block')
-        this.darkIconTarget.classList.add('hidden')
-        this.darkIconTarget.classList.remove('block')
+        lightIcon.style.display = 'flex'
+        darkIcon.style.display = 'none'
       }
     }
   }
