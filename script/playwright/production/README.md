@@ -179,6 +179,70 @@ npx playwright test --trace=on
 npx playwright test --screenshot=only-on-failure
 ```
 
+## Quick Start Guide
+
+### 1. Basic Test Execution
+```bash
+# Test public pages (safe to run anytime)
+npx playwright test script/playwright/production/public/
+
+# Test single authenticated user workflow
+npx playwright test script/playwright/production/authenticated/regular-user.spec.js --workers=1
+
+# Test responsive behavior
+npx playwright test script/playwright/production/public/responsive.spec.js
+```
+
+### 2. Load Testing (Use with Caution)
+```bash
+# Light concurrent load (5 users)
+npx playwright test script/playwright/production/load/concurrent-users.spec.js --workers=5
+
+# High-traffic simulation (monitor AppSignal)
+npx playwright test script/playwright/production/load/high-traffic.spec.js --workers=3
+
+# Stress testing (coordinate with team first)
+npx playwright test script/playwright/production/load/stress-test.spec.js --workers=2
+```
+
+### 3. Monitoring During Tests
+- **AppSignal Dashboard:** Monitor response times, error rates, and throughput
+- **Server Resources:** Watch CPU, memory, and database connections
+- **User Impact:** Ensure real users aren't affected
+- **Rate Limiting:** Tests respect 429 responses automatically
+
+## Test Categories Summary
+
+### Public Tests (Safe)
+- **Landing Page:** User interaction simulation, responsive testing
+- **Public Browsing:** Feature exploration, navigation testing
+- **Responsive:** Cross-device compatibility testing
+
+### Authenticated Tests (Moderate Load)
+- **System Admin:** Full system access, organization management
+- **Org Admin:** Organization-specific workflows (3 organizations)
+- **Team Admin:** Team management and project oversight
+- **Regular User:** Time tracking and project access
+- **Freelancer:** Limited access scenarios
+
+### Load Tests (High Impact - Use Carefully)
+- **Concurrent Users:** Multi-user session simulation
+- **High Traffic:** Critical path stress testing
+- **Stress Test:** Breaking point and recovery testing
+
+## Performance Expectations
+
+### Response Time Targets
+- **Dashboard:** < 3 seconds under normal load
+- **Time Logs:** < 5 seconds (intentional N+1 queries for monitoring)
+- **User Management:** < 4 seconds
+- **Project Pages:** < 3 seconds
+
+### Load Testing Thresholds
+- **Light Load:** 1-5 concurrent users
+- **Medium Load:** 5-10 concurrent users
+- **Heavy Load:** 10+ concurrent users (coordinate with team)
+
 ## Safety Notes
 
 ⚠️ **Production Environment Warning:**
@@ -187,3 +251,15 @@ npx playwright test --screenshot=only-on-failure
 - Stop tests immediately if issues are detected
 - Coordinate with team before running large-scale tests
 - Respect production data and user privacy
+
+### Pre-Test Checklist
+- [ ] Verify AppSignal monitoring is active
+- [ ] Confirm no critical business operations are running
+- [ ] Notify team of planned load testing
+- [ ] Start with small worker counts
+- [ ] Monitor system resources in real-time
+
+### Emergency Procedures
+- **Stop Tests:** `Ctrl+C` or kill Playwright processes
+- **Check System:** Monitor AppSignal for recovery
+- **Team Communication:** Report any issues immediately
