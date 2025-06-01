@@ -5,6 +5,10 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+
+# Clobber the friggin assets
+bundle exec rails assets:clobber
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 
