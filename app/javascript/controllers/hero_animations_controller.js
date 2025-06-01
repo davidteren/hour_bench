@@ -132,20 +132,16 @@ export default class extends Controller {
   animateCards() {
     this.cardsTarget.style.opacity = '1'
     this.cardsTarget.style.transform = 'translateY(0)'
-    
-    // Animate individual preview cards
+
+    // Simple fade-in animation for cards without layout shifts
     const cards = this.cardsTarget.querySelectorAll('.preview-card')
     cards.forEach((card, index) => {
       card.style.opacity = '0'
-      card.style.transform = 'translateY(30px) rotateX(15deg)'
-      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
-      
+      card.style.transition = 'opacity 0.6s ease'
+
       setTimeout(() => {
         card.style.opacity = '1'
-        card.style.transform = 'translateY(0) rotateX(0deg)'
-        
-        // Add floating animation
-        this.addFloatingAnimation(card, index)
+        // NO floating animation - keep cards static to prevent layout shifts
       }, index * 200)
     })
   }
@@ -163,25 +159,11 @@ export default class extends Controller {
   }
   
   addFloatingAnimation(card, index) {
-    // Create subtle floating animation with different phases for each card
-    const duration = 3000 + (index * 500) // Different duration for each card
-    const amplitude = 5 + (index * 2) // Different amplitude
-    
-    let startTime = performance.now()
-    
-    const animate = (currentTime) => {
-      const elapsed = currentTime - startTime
-      const progress = (elapsed % duration) / duration
-      const yOffset = Math.sin(progress * Math.PI * 2) * amplitude
-      
-      card.style.transform = `translateY(${yOffset}px)`
-      
-      requestAnimationFrame(animate)
-    }
-    
-    // Start floating animation after initial animation completes
-    setTimeout(() => {
-      requestAnimationFrame(animate)
-    }, 1000)
+    // DISABLED: Floating animation causes layout shifts
+    // Instead, just ensure the card stays in its final position
+    card.style.transform = 'translateY(0) rotateX(0deg)'
+
+    // Optional: Add a subtle static glow effect instead
+    card.style.boxShadow = '0 4px 20px rgba(99, 102, 241, 0.1)'
   }
 }

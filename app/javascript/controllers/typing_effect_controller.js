@@ -15,8 +15,17 @@ export default class extends Controller {
     this.currentCharIndex = 0
     this.isDeleting = false
     this.isPaused = false
-    
+
+    // CRITICAL: Start with empty content to prevent initial layout shift
+    this.textTarget.textContent = ''
+
+    // Ensure CSS properties are applied - allow text wrapping
+    this.textTarget.style.overflow = 'hidden'
+    this.textTarget.style.wordWrap = 'break-word'
+    this.textTarget.style.hyphens = 'auto'
+
     if (this.wordsValue.length > 0) {
+      // Start typing immediately
       this.startTyping()
     }
   }
