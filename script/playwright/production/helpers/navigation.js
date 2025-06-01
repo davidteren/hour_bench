@@ -49,7 +49,8 @@ async function clickElement(page, selector, description = '') {
     console.log(`👆 Clicking: ${description || selector}`);
     
     // Wait for element to be visible and clickable
-    await page.waitForSelector(selector, { state: 'visible', timeout: 10000 });
+    const selectorString = typeof selector === 'string' ? selector : selector.toString();
+    await page.waitForSelector(selectorString, { state: 'visible', timeout: 10000 });
     
     // Scroll element into view if needed
     await page.locator(selector).scrollIntoViewIfNeeded();

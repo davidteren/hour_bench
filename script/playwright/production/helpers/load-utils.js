@@ -207,18 +207,28 @@ async function setupPerformanceMonitoring(page) {
   });
   
   // Monitor slow responses
+  const responseStartTimes = new Map();
+
+  page.on('request', request => {
+    responseStartTimes.set(request.url(), Date.now());
+  });
+
   page.on('response', response => {
     const url = response.url();
     const status = response.status();
-    
+
     if (status >= 400) {
       console.log(`⚠️ HTTP ${status}: ${url}`);
     }
-    
+
     // Log slow responses (>5 seconds)
-    const timing = response.timing();
-    if (timing && timing.responseEnd - timing.requestStart > 5000) {
-      console.log(`🐌 Slow Response (${Math.round(timing.responseEnd - timing.requestStart)}ms): ${url}`);
+    const startTime = responseStartTimes.get(url);
+    if (startTime) {
+      const responseTime = Date.now() - startTime;
+      if (responseTime > 5000) {
+        console.log(`🐌 Slow Response (${responseTime}ms): ${url}`);
+      }
+      responseStartTimes.delete(url);
     }
   });
 }

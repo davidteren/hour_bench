@@ -25,7 +25,7 @@ async function loginUser(page, email, password, retries = 3) {
       
       // Submit form and wait for navigation
       await Promise.all([
-        page.waitForURL(`${PRODUCTION_BASE_URL}/`, { timeout: 30000 }),
+        page.waitForURL(`${PRODUCTION_BASE_URL}/app`, { timeout: 30000 }),
         page.click('input[type="submit"]')
       ]);
       
