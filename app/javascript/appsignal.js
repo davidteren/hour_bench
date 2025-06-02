@@ -1,6 +1,29 @@
 // AppSignal Frontend Configuration
 import Appsignal from "@appsignal/javascript"
-import { APPSIGNAL_CONFIG } from "./appsignal_config"
+
+// Default configuration (will be overridden by imported config if available)
+const DEFAULT_CONFIG = {
+  BATCH_SIZE: 5,
+  BATCH_DELAY: 10000,
+  THROTTLE_DELAY: 5000,
+  ENABLE_PERFORMANCE_METRICS: false,
+  ENABLE_RESOURCE_TRACKING: false,
+  ENABLE_WEB_VITALS: true,
+  ENABLE_USER_INTERACTIONS: true,
+  ENABLE_ERROR_TRACKING: true,
+  isDevelopment: () => window.RAILS_ENV === 'development',
+  getConfig() {
+    if (this.isDevelopment()) {
+      return {
+        ...this,
+        BATCH_SIZE: 3,
+        BATCH_DELAY: 15000,
+        THROTTLE_DELAY: 10000
+      }
+    }
+    return this
+  }
+}
 
 // Initialize AppSignal with configuration
 export const appsignal = new Appsignal({
@@ -32,8 +55,17 @@ export class FrontendMetrics {
     this.metricQueue = []
     this.batchTimeout = null
 
-    // Use configuration settings
-    const config = APPSIGNAL_CONFIG.getConfig()
+    // Use configuration settings (try imported config first, fallback to default)
+    let configSource = DEFAULT_CONFIG
+    try {
+      if (typeof window.APPSIGNAL_CONFIG !== 'undefined') {
+        configSource = window.APPSIGNAL_CONFIG
+      }
+    } catch (e) {
+      console.log('Using default AppSignal config')
+    }
+
+    const config = configSource.getConfig()
     this.BATCH_SIZE = config.BATCH_SIZE
     this.BATCH_DELAY = config.BATCH_DELAY
     this.THROTTLE_DELAY = config.THROTTLE_DELAY
@@ -303,6 +335,10 @@ export class FrontendMetrics {
 
 // Initialize metrics tracking
 export const frontendMetrics = new FrontendMetrics(appsignal)
+
+// Expose to window for debugging
+window.appsignal = appsignal
+window.frontendMetrics = frontendMetrics
 
 // Auto-track page loads
 frontendMetrics.trackPageLoad()

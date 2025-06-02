@@ -3,9 +3,9 @@ module AppsignalHelper
   def appsignal_frontend_config
     # You'll need to get your frontend API key from AppSignal dashboard
     # Go to: App Settings > Push & Deploy > Front-end error monitoring
-    frontend_key = Rails.application.credentials.dig(:appsignal, :frontend_key) || 
-                   ENV['APPSIGNAL_FRONTEND_KEY'] || 
-                   'YOUR_FRONTEND_API_KEY_HERE'
+    frontend_key = Rails.application.credentials.dig(:appsignal, :frontend_key) ||
+                   ENV['APPSIGNAL_FRONTEND_KEY'] ||
+                   (Rails.env.development? ? 'dev-key-placeholder' : 'YOUR_FRONTEND_API_KEY_HERE')
     
     config = {
       APPSIGNAL_FRONTEND_KEY: frontend_key,
