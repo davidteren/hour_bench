@@ -1,11 +1,15 @@
 // AppSignal Frontend Configuration
 import Appsignal from "@appsignal/javascript"
+import { APPSIGNAL_CONFIG } from "./appsignal_config"
 
 // Initialize AppSignal with configuration
 export const appsignal = new Appsignal({
   key: window.APPSIGNAL_FRONTEND_KEY || "YOUR_FRONTEND_API_KEY", // Will be set via Rails
   namespace: "frontend",
   revision: window.APP_REVISION || undefined,
+  // Reduce data collection frequency
+  enablePerformanceMetrics: false, // Disable automatic performance metrics
+  enableErrorReporting: true,
   ignoreErrors: [
     // Common browser extension errors to ignore
     /Script error/,
@@ -24,7 +28,49 @@ export class FrontendMetrics {
   constructor(appsignalInstance) {
     this.appsignal = appsignalInstance
     this.pageLoadStart = performance.now()
+    this.initialized = false
+    this.metricQueue = []
+    this.batchTimeout = null
+
+    // Use configuration settings
+    const config = APPSIGNAL_CONFIG.getConfig()
+    this.BATCH_SIZE = config.BATCH_SIZE
+    this.BATCH_DELAY = config.BATCH_DELAY
+    this.THROTTLE_DELAY = config.THROTTLE_DELAY
+    this.config = config
+
+    // Throttle tracking to reduce API calls
+    this.lastTrackTime = {}
+
+    this.setupBatchedMetrics()
+  }
+
+  // Initialize only once to prevent duplicate observers
+  initialize() {
+    if (this.initialized) return
+    this.initialized = true
     this.setupPerformanceObserver()
+  }
+
+  // Setup batched metrics to reduce API calls
+  setupBatchedMetrics() {
+    // Process batched metrics every BATCH_DELAY milliseconds
+    setInterval(() => {
+      this.processBatch()
+    }, this.BATCH_DELAY)
+  }
+
+  // Process and send batched metrics
+  processBatch() {
+    if (this.metricQueue.length === 0) return
+
+    // Take up to BATCH_SIZE metrics from queue
+    const batch = this.metricQueue.splice(0, this.BATCH_SIZE)
+
+    // Send each metric in the batch
+    batch.forEach(metric => {
+      this.sendMetric(metric)
+    })
   }
 
   // Track page load performance
@@ -32,9 +78,9 @@ export class FrontendMetrics {
     window.addEventListener('load', () => {
       const loadTime = performance.now() - this.pageLoadStart
       this.trackCustomMetric('page_load_time', loadTime, 'distribution')
-      
-      // Track Core Web Vitals if available
-      this.trackWebVitals()
+
+      // Initialize performance observers only after page load
+      this.initialize()
     })
   }
 
@@ -66,10 +112,10 @@ export class FrontendMetrics {
     }).observe({ entryTypes: ['layout-shift'] })
   }
 
-  // Setup performance observer for navigation timing
+  // Setup performance observer for navigation timing (reduced frequency)
   setupPerformanceObserver() {
     if ('PerformanceObserver' in window) {
-      // Track navigation timing
+      // Track navigation timing (only once per page)
       new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
           if (entry.entryType === 'navigation') {
@@ -78,13 +124,27 @@ export class FrontendMetrics {
         }
       }).observe({ entryTypes: ['navigation'] })
 
-      // Track resource timing for critical resources
-      new PerformanceObserver((entryList) => {
-        for (const entry of entryList.getEntries()) {
-          this.trackResourceMetrics(entry)
-        }
-      }).observe({ entryTypes: ['resource'] })
+      // Disable resource timing observer to reduce API calls
+      // Only track critical resources on page load instead
+      this.trackCriticalResourcesOnce()
     }
+  }
+
+  // Track critical resources only once per page load
+  trackCriticalResourcesOnce() {
+    setTimeout(() => {
+      const resources = performance.getEntriesByType('resource')
+      const criticalResources = resources.filter(entry => {
+        const criticalTypes = ['.css', '.js']
+        return criticalTypes.some(ext => entry.name.includes(ext)) && entry.duration > 100
+      })
+
+      // Only track the slowest critical resources
+      criticalResources
+        .sort((a, b) => b.duration - a.duration)
+        .slice(0, 3) // Only top 3 slowest
+        .forEach(entry => this.trackResourceMetrics(entry))
+    }, 2000) // Wait 2 seconds after page load
   }
 
   // Track navigation-specific metrics
@@ -127,27 +187,57 @@ export class FrontendMetrics {
     return 'other'
   }
 
-  // Track custom metrics with different types
+  // Track custom metrics with throttling and batching
   trackCustomMetric(name, value, type = 'gauge', tags = {}) {
-    try {
-      const span = this.appsignal.createSpan()
-      span.setAction(`frontend_metric_${name}`)
-      span.setNamespace('frontend_metrics')
-      span.setTags({
+    // Throttle similar metrics to reduce API calls
+    const metricKey = `${name}_${type}`
+    const now = Date.now()
+
+    if (this.lastTrackTime[metricKey] &&
+        (now - this.lastTrackTime[metricKey]) < this.THROTTLE_DELAY) {
+      return // Skip if too soon since last similar metric
+    }
+
+    this.lastTrackTime[metricKey] = now
+
+    // Add to batch queue instead of sending immediately
+    const metric = {
+      name,
+      value,
+      type,
+      tags: {
         metric_type: type,
         metric_name: name,
         page_url: window.location.pathname,
         user_agent: navigator.userAgent.substring(0, 100),
         ...tags
-      })
+      },
+      timestamp: now
+    }
+
+    this.metricQueue.push(metric)
+
+    // If queue is full, process immediately
+    if (this.metricQueue.length >= this.BATCH_SIZE) {
+      this.processBatch()
+    }
+  }
+
+  // Send individual metric (used by batch processor)
+  sendMetric(metric) {
+    try {
+      const span = this.appsignal.createSpan()
+      span.setAction(`frontend_metric_${metric.name}`)
+      span.setNamespace('frontend_metrics')
+      span.setTags(metric.tags)
       span.setParams({
-        metric_value: value,
-        timestamp: Date.now()
+        metric_value: metric.value,
+        timestamp: metric.timestamp
       })
-      
+
       this.appsignal.send(span)
     } catch (error) {
-      console.warn('Failed to track custom metric:', error)
+      console.warn('Failed to send metric:', error)
     }
   }
 

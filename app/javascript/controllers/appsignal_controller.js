@@ -12,7 +12,13 @@ export default class extends Controller {
 
   connect() {
     console.log("🔍 AppSignal monitoring controller connected")
-    
+
+    // Prevent duplicate initialization on Turbo navigation
+    if (window.appSignalInitialized) {
+      return
+    }
+    window.appSignalInitialized = true
+
     if (this.trackPageViewsValue) {
       this.trackPageView()
     }
